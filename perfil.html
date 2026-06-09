@@ -5,16 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu Perfil - Nexus</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     
     <style>
         :root {
-            --bg-main: #0a0a0c;
-            --surface-card: #141419;
-            --red-brand: #e74c3c;
+            --bg-gradient: linear-gradient(180deg, #060b19 0%, #020408 100%);
+            --card-glass: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.07);
+            --blue-primary: #0052ff;
+            --blue-glow: rgba(0, 82, 255, 0.25);
+            --cyan-neon: #00d2ff;
+            --text-muted: #8a99ad;
             --tg-blue: #0088cc;
-            --text-secondary: #71717a;
+            --red-danger: #ff4b5c;
         }
 
         * { 
@@ -27,28 +32,32 @@
         }
 
         body { 
-            background: var(--bg-main); 
+            background: var(--bg-gradient); 
             color: white; 
-            padding: 20px; 
+            padding: 25px 20px; 
             padding-bottom: 120px; 
             min-height: 100vh; 
+            overflow-x: hidden;
         }
 
-        /* TÍTULO DA PÁGINA ESTILO IOS */
+        /* TÍTULO DA PÁGINA PREMIUM */
         .page-title {
             font-size: 1.6rem;
-            font-weight: 700;
+            font-weight: 800;
             margin: 15px 5px 25px 5px;
             letter-spacing: -0.5px;
         }
+        .page-title b { color: var(--cyan-neon); text-shadow: 0 0 10px rgba(0, 210, 255, 0.3); }
 
-        /* DESIGN PREMIUM STYLE: BLACK CARD DE INVESTIDOR */
+        /* BLACK CARD DE INVESTIDOR GLASSMORPHISM */
         .investor-card {
-            background: linear-gradient(135deg, #1d1d26 0%, #0d0d12 100%);
+            background: var(--card-glass);
             border-radius: 24px;
             padding: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.1);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05);
             position: relative;
             overflow: hidden;
             margin-bottom: 30px;
@@ -61,7 +70,7 @@
             right: -20%;
             width: 200px;
             height: 200px;
-            background: rgba(231, 76, 60, 0.15);
+            background: rgba(0, 210, 255, 0.12);
             filter: blur(50px);
             border-radius: 50%;
         }
@@ -70,7 +79,7 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid var(--card-border);
             padding-bottom: 20px;
             margin-bottom: 20px;
         }
@@ -78,20 +87,21 @@
         .profile-avatar {
             width: 54px;
             height: 54px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--card-border);
             border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.2rem;
-            color: var(--red-brand);
+            color: var(--cyan-neon);
+            text-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
         }
 
-        .user-meta h2 { font-size: 1.15rem; font-weight: 700; text-transform: capitalize; }
-        .user-meta p { color: var(--text-secondary); font-size: 0.8rem; margin-top: 2px; }
+        .user-meta h2 { font-size: 1.15rem; font-weight: 700; text-transform: capitalize; color: #fff; }
+        .user-meta p { color: var(--text-muted); font-size: 0.8rem; margin-top: 2px; }
 
-        /* Dados de Balanço dentro do cartão estilo FinTech */
+        /* Dados de Balanço FinTech */
         .card-balances-grid {
             display: grid;
             grid-template-columns: 1.2fr 0.8fr;
@@ -99,36 +109,39 @@
         }
 
         .balance-block small {
-            font-size: 0.65rem;
-            color: var(--text-secondary);
+            font-size: 0.68rem;
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.5px;
             display: block;
             margin-bottom: 4px;
+            font-weight: 600;
         }
 
         .balance-block span {
-            font-size: 1.35rem;
-            font-weight: 700;
+            font-size: 1.4rem;
+            font-weight: 800;
             color: #fff;
         }
 
         /* CATEGORIAS EM CÁPSULAS MODULARES */
         .menu-category-title {
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             font-weight: 700;
-            color: var(--text-secondary);
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.8px;
-            margin: 0 0 10px 8px;
+            margin: 0 0 12px 8px;
         }
 
         .menu-group-box {
-            background: var(--surface-card);
+            background: var(--card-glass);
             border-radius: 20px;
             margin-bottom: 25px;
             overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.02);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .menu-row-item {
@@ -138,29 +151,34 @@
             color: #efeff1;
             text-decoration: none;
             transition: background 0.2s;
-            border-bottom: 1px solid rgba(255,255,255,0.02);
+            border-bottom: 1px solid rgba(255,255,255,0.03);
         }
         .menu-row-item:last-child { border-bottom: none; }
-        .menu-row-item:active { background: rgba(255,255,255,0.02); }
+        .menu-row-item:active { background: rgba(255,255,255,0.04); }
 
         .menu-row-item .icon-wrapper {
             width: 36px;
             height: 36px;
             border-radius: 10px;
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--card-border);
             display: flex;
             align-items: center;
             justify-content: center;
             margin-right: 15px;
-            color: var(--red-brand);
+            color: var(--cyan-neon);
             font-size: 0.95rem;
         }
 
-        /* Cores temáticas para os ícones das redes sociais */
-        .menu-row-item.social-tg .icon-wrapper { color: var(--tg-blue); background: rgba(0, 136, 204, 0.05); }
+        /* Cores temáticas para redes sociais */
+        .menu-row-item.social-tg .icon-wrapper { 
+            color: var(--tg-blue); 
+            background: rgba(0, 136, 204, 0.05); 
+            border-color: rgba(0, 136, 204, 0.15);
+        }
 
         .menu-row-item span { font-size: 0.9rem; font-weight: 600; }
-        .menu-row-item .chevron-right { margin-left: auto; color: #3f3f46; font-size: 0.8rem; }
+        .menu-row-item .chevron-right { margin-left: auto; color: #4b5563; font-size: 0.8rem; }
 
         /* FLOATING TELEGRAM BUTTON RESIZED */
         .btn-float-tg {
@@ -168,19 +186,23 @@
             width: 50px; height: 50px; background-color: var(--tg-blue);
             color: #FFF; border-radius: 50%; display: flex;
             align-items: center; justify-content: center;
-            font-size: 1.3rem; box-shadow: 0px 8px 20px rgba(0,0,0,0.5);
+            font-size: 1.3rem; box-shadow: 0px 8px 25px rgba(0, 136, 204, 0.3);
             z-index: 999; text-decoration: none;
+            transition: 0.2s;
         }
+        .btn-float-tg:active { transform: scale(0.9); }
 
         /* NATIVE BOTTOM NAVIGATION HUB */
         .nav-bottom { 
             position: fixed; bottom: 0; left: 0; width: 100%; 
-            background: #000000; display: flex; justify-content: space-around; 
-            padding: 10px 0; border-top: 1px solid rgba(255,255,255,0.03); 
+            background: #030611; display: flex; justify-content: space-around; 
+            padding: 10px 0; border-top: 1px solid var(--card-border); 
             z-index: 10000; height: 75px; align-items: center;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
         }
         .nav-item { 
-            color: #4c4c54; text-align: center; text-decoration: none; flex: 1; 
+            color: var(--text-muted); text-align: center; text-decoration: none; flex: 1; 
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
             gap: 4px; transition: color 0.2s;
         }
@@ -188,15 +210,16 @@
         .nav-item span { font-size: 0.65rem; font-weight: 500; }
 
         .nav-item.active { color: white; }
-        .nav-item.active i { color: var(--red-brand); }
+        .nav-item.active i { color: var(--cyan-neon); text-shadow: 0 0 10px rgba(0, 210, 255, 0.4); }
 
+        /* BOTÃO LOGOUT DANGER ELEGANTE */
         .btn-logout-danger { 
             width: 100%; padding: 16px; border-radius: 18px; 
-            border: 1px solid rgba(231, 76, 60, 0.15); background: transparent; 
-            color: var(--red-brand); font-weight: 700; cursor: pointer;
-            font-size: 0.9rem; transition: background 0.2s; margin-top: 10px;
+            border: 1px solid rgba(255, 75, 92, 0.15); background: rgba(255, 75, 92, 0.02); 
+            color: var(--red-danger); font-weight: 700; cursor: pointer;
+            font-size: 0.9rem; transition: 0.2s; margin-top: 10px;
         }
-        .btn-logout-danger:active { background: rgba(231, 76, 60, 0.05); }
+        .btn-logout-danger:active { background: rgba(255, 75, 92, 0.08); transform: scale(0.98); }
     </style>
 </head>
 <body>
@@ -205,9 +228,9 @@
         <i class="fab fa-telegram-plane"></i>
     </a>
 
-    <h1 class="page-title">Configurações</h1>
+    <h1 class="page-title">Configurações<b>.</b></h1>
 
-    <div class="investor-card">
+    <div class="investor-card animate__animated animate__fadeInDown">
         <div class="card-header-user">
             <div class="profile-avatar"><i class="fas fa-user-shield"></i></div>
             <div class="user-meta">
@@ -222,13 +245,13 @@
             </div>
             <div class="balance-block" style="text-align: right;">
                 <small>Rede Ativa</small>
-                <span id="stat-indicados" style="color: #fff; font-size: 1.2rem;"><i class="fas fa-users" style="font-size:0.85rem; margin-right:4px; color: var(--red-brand);"></i>0</span>
+                <span id="stat-indicados" style="color: #fff;"><i class="fas fa-users" style="font-size:0.85rem; margin-right:6px; color: var(--cyan-neon);"></i>0</span>
             </div>
         </div>
     </div>
 
     <div class="menu-category-title">Operações Financeiras</div>
-    <div class="menu-group-box">
+    <div class="menu-group-box animate__animated animate__fadeInUp" style="animation-delay: 0.05s;">
         <a href="deposito.html" class="menu-item menu-row-item">
             <div class="icon-wrapper"><i class="fas fa-plus-circle"></i></div>
             <span>Adicionar Fundos</span>
@@ -247,7 +270,7 @@
     </div>
 
     <div class="menu-category-title">Suporte & Comunidade</div>
-    <div class="menu-group-box">
+    <div class="menu-group-box animate__animated animate__fadeInUp" style="animation-delay: 0.1s;">
         <a href="https://t.me/monety9220" target="_blank" class="menu-item menu-row-item social-tg">
             <div class="icon-wrapper"><i class="fas fa-headset"></i></div>
             <span>Atendimento ao Cliente</span>
@@ -260,7 +283,7 @@
         </a>
     </div>
 
-    <button class="btn-logout-danger" id="btnLogout">Desconectar da Conta</button>
+    <button class="btn-logout-danger animate__animated animate__fadeInUp" style="animation-delay: 0.15s;" id="btnLogout">Desconectar da Conta</button>
 
     <nav class="nav-bottom">
         <a href="home.html" class="nav-item"><i class="fas fa-home"></i><span>Início</span></a>
@@ -313,11 +336,11 @@
                 text: "Você precisará fazer login novamente para acessar seus lucros.",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#e74c3c',
-                cancelButtonColor: '#141419',
+                confirmButtonColor: '#ff4b5c',
+                cancelButtonColor: 'rgba(255,255,255,0.05)',
                 confirmButtonText: 'Sim, sair',
                 cancelButtonText: 'Cancelar',
-                background: '#0a0a0c',
+                background: '#060b19',
                 color: '#fff'
             });
 
