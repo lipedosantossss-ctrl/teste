@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investir - Nexus</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <style>
+        :root {
+            --bg-base: #060608;
+            --surface-panel: #111116;
+            --red-action: #ff3838;
+            --green-profit: #2ecc71;
+            --gold-accent: #ffd700;
+            --border-glow: rgba(255, 255, 255, 0.03);
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Inter', sans-serif; 
+            outline: none !important; 
+            -webkit-tap-highlight-color: transparent; 
+        }
+
+        body { 
+            background: var(--bg-base); 
+            color: white; 
+            padding: 20px; 
+            padding-bottom: 110px; 
+            min-height: 100vh; 
+        }
+
+        .header-section { 
+            margin: 15px 5px 25px 5px; 
+        }
+        .header-section h2 { 
+            font-size: 1.5rem; 
+            font-weight: 900; 
+            letter-spacing: -0.8px;
+        }
+        .header-section h2 span { color: var(--red-action); }
+        .header-section p { font-size: 0.8rem; color: #71717a; margin-top: 4px; }
+
+        /* BALANÇO ESTILO BANCO DIGITAL NATIVO */
+        .account-balance-card {
+            background: linear-gradient(135deg, #181820 0%, #0b0b0e 100%);
+            border-radius: 20px; 
+            padding: 20px;
+            margin-bottom: 25px; 
+            border: 1px solid rgba(255,255,255,0.04);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        }
+        .account-balance-card small { 
+            color: #71717a; 
+            font-size: 0.65rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.8px; 
+            display: block;
+        }
+        .account-balance-card .balance-value { 
+            font-size: 1.7rem; 
+            font-weight: 700; 
+            color: #fff; 
+            margin-top: 5px; 
+            letter-spacing: -0.5px;
+        }
+
+        /* CONTROLE DE ABAS (SEGMENTED CAPTURE) PARA QUEBRAR A REPETIÇÃO */
+        .tier-navigation-bar {
+            display: flex;
+            background: var(--surface-panel);
+            padding: 5px;
+            border-radius: 14px;
+            margin-bottom: 25px;
+            gap: 4px;
+            border: 1px solid rgba(255,255,255,0.02);
+        }
+        .tier-tab-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #52525b;
+            padding: 12px 2px;
+            border-radius: 10px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .tier-tab-btn.active {
+            background: rgba(255, 56, 56, 0.08);
+            color: var(--red-action);
+            border: 1px solid rgba(255, 56, 56, 0.15);
+        }
+
+        .plans-list { display: flex; flex-direction: column; gap: 20px; }
+
+        /* NOVO DESIGN DO CARTÃO DE PLANO */
+        .plan-premium-card {
+            background: var(--surface-panel); 
+            border: 1px solid var(--border-glow);
+            border-radius: 24px; 
+            padding: 25px; 
+            position: relative; 
+            overflow: hidden;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+            transition: transform 0.2s;
+        }
+
+        .card-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        .plan-premium-card h3 { 
+            font-size: 1rem; 
+            color: #fff; 
+            font-weight: 800; 
+            letter-spacing: -0.3px;
+        }
+        
+        .badge-cycle {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            font-size: 0.65rem; 
+            color: #a1a1aa;
+            font-weight: 600; 
+            padding: 5px 12px;
+            border-radius: 30px;
+        }
+
+        .price-holder { 
+            font-size: 2.2rem; 
+            font-weight: 900; 
+            color: #fff; 
+            margin-bottom: 20px; 
+            letter-spacing: -1px; 
+            text-align: left;
+            width: 100%;
+        }
+        .price-holder small {
+            font-size: 0.85rem;
+            color: #52525b;
+            font-weight: 500;
+            margin-right: 2px;
+        }
+
+        .metrics-asymmetric-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            width: 100%; 
+            gap: 10px; 
+            margin-bottom: 20px; 
+        }
+        .metric-cell { 
+            background: rgba(0,0,0,0.2); 
+            padding: 12px; 
+            border-radius: 14px; 
+            border: 1px solid rgba(255,255,255,0.01); 
+        }
+        .metric-cell span { font-size: 0.6rem; color: #71717a; text-transform: uppercase; display: block; margin-bottom: 3px; }
+        .metric-cell strong { font-size: 0.85rem; color: #fff; font-weight: 700; }
+
+        .total-yield-box { 
+            width: 100%; 
+            background: rgba(46, 204, 113, 0.04); 
+            border: 1px solid rgba(46, 204, 113, 0.12); 
+            padding: 14px; 
+            border-radius: 14px; 
+            margin-bottom: 20px; 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .total-yield-box span { font-size: 0.65rem; color: var(--green-profit); text-transform: uppercase; font-weight: 700; }
+        .total-yield-box strong { font-size: 1.05rem; color: var(--green-profit); font-weight: 800; }
+        
+        .btn-action-trigger { 
+            background: linear-gradient(135deg, #ff3838 0%, #b31111 100%); 
+            color: white; 
+            border: none; 
+            padding: 16px; 
+            border-radius: 14px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            width: 100%; 
+            font-size: 0.9rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            box-shadow: 0 6px 20px rgba(255, 56, 56, 0.2); 
+            transition: all 0.2s; 
+        }
+        .btn-action-locked { 
+            background: #27272a !important; 
+            color: #71717a !important; 
+            cursor: not-allowed !important; 
+            box-shadow: none !important; 
+            border: 1px solid rgba(255,255,255,0.02);
+        }
+
+        /* ESTILO INTERFACE BLOQUEADA PARA ITENS EM BREVE */
+        .plan-premium-card.locked-card {
+            opacity: 0.5;
+        }
+
+        /* NATIVE BOTTOM NAVIGATION HUB */
+        .nav-bottom { 
+            position: fixed; bottom: 0; left: 0; width: 100%; 
+            background: #000000; display: flex; justify-content: space-around; 
+            padding: 10px 0; border-top: 1px solid rgba(255,255,255,0.03); 
+            z-index: 10000; height: 75px; align-items: center;
+        }
+        .nav-item { 
+            color: #4c4c54; text-align: center; text-decoration: none; flex: 1; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            gap: 4px; transition: color 0.2s;
+        }
+        .nav-item i { font-size: 1.25rem; }
+        .nav-item span { font-size: 0.65rem; font-weight: 500; }
+
+        .nav-item.active { color: white; }
+        .nav-item.active i { color: var(--red-action); }
+
+    </style>
+</head>
+<body>
+
+    <div class="header-section">
+        <h2><span>Nexus</span> Mercado</h2>
+        <p>Aloque capital nos contratos de rendimento automatizado</p>
+    </div>
+
+    <div class="account-balance-card">
+        <small>Saldo operacional disponível</small>
+        <div id="user-balance" class="balance-value">R$ 0,00</div>
+    </div>
+
+    <div class="tier-navigation-bar">
+        <button class="tier-tab-btn active" id="tab-essencial" onclick="switchTierTab('essencial')">Essenciais</button>
+        <button class="tier-tab-btn" id="tab-prime" onclick="switchTierTab('prime')">Prime</button>
+        <button class="tier-tab-btn" id="tab-exclusive" onclick="switchTierTab('exclusive')">Alta Perf.</button>
+    </div>
+
+    <div id="container-planos" class="plans-list"></div>
+
+    <nav class="nav-bottom">
+        <a href="home.html" class="nav-item"><i class="fas fa-home"></i><span>Início</span></a>
+        <a href="planos.html" class="nav-item active"><i class="fas fa-chart-pie"></i><span>Planos</span></a>
+        <a href="indicacao.html" class="nav-item"><i class="fas fa-share-alt"></i><span>Indicar</span></a>
+        <a href="perfil.html" class="nav-item"><i class="fas fa-user-alt"></i><span>Perfil</span></a>
+    </nav>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, updateDoc, collection, addDoc, Timestamp, increment, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDKDFw7khZzM9hIX7xbbrbFQeESiCLnmOw",
+        authDomain: "monety-site-9175f.firebaseapp.com",
+        projectId: "monety-site-9175f",
+        storageBucket: "monety-site-9175f.firebasestorage.app",
+        messagingSenderId: "840821848803",
+        appId: "1:840821848803:web:b99a5528e4bb925518a3d6"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let saldoAtual = 0;
+    let uidUsuario = null;
+    let activeTier = 'essencial'; // Controle de estado da aba ativa
+
+    const listaPlanos = [
+        { nome: 'MINI', valor: 30, dias: 60, diario: 6, total: 360, ativo: true, tier: 'essencial' },
+        { nome: 'BRONZE', valor: 50, dias: 30, diario: 10, total: 300, ativo: true, tier: 'essencial' },
+        { nome: 'START', valor: 100, dias: 30, diario: 20, total: 600, ativo: true, tier: 'essencial' },
+        { nome: 'PRATA', valor: 200, dias: 30, diario: 40, total: 1200, ativo: true, tier: 'essencial' },
+        { nome: 'SPEED', valor: 350, dias: 30, diario: 70, total: 2100, ativo: true, tier: 'prime' },
+        { nome: 'OURO', valor: 450, dias: 30, diario: 90, total: 2700, ativo: true, tier: 'prime' },
+        { nome: 'ADVANCED', valor: 500, dias: 30, diario: 100, total: 3000, ativo: true, tier: 'prime' },
+        { nome: 'VITALITY', valor: 700, dias: 30, diario: 140, total: 4200, ativo: true, tier: 'prime' },
+        { nome: 'PREMIUM', valor: 1000, dias: 30, diario: 200, total: 6000, ativo: true, tier: 'exclusive' },
+        { nome: 'VIP', valor: 2000, dias: 30, diario: 400, total: 12000, ativo: true, tier: 'exclusive' },
+        { nome: 'ELITE', valor: 3000, dias: 30, diario: 0, total: 0, ativo: false, tier: 'exclusive' },
+        { nome: 'ULTIMATE', valor: 5000, dias: 30, diario: 0, total: 0, ativo: false, tier: 'exclusive' }
+    ];
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            uidUsuario = user.uid;
+            await carregarDados();
+            await verificarRendimentos();
+            gerarPlanos();
+        } else { window.location.href = "login.html"; }
+    });
+
+    async function carregarDados() {
+        try {
+            const snap = await getDoc(doc(db, "usuarios", uidUsuario));
+            if (snap.exists()) {
+                const dados = snap.data();
+                saldoAtual = Number(dados.saldo || dados.balance) || 0;
+                document.getElementById('user-balance').innerText = `R$ ${saldoAtual.toFixed(2).replace('.', ',')}`;
+            }
+        } catch (e) { console.error("Erro ao carregar saldo:", e); }
+    }
+
+    async function verificarRendimentos() {
+        try {
+            const q = query(collection(db, "investimentos"), 
+                where("userId", "==", uidUsuario),
+                where("status", "==", "ativo")
+            );
+            
+            const snapshot = await getDocs(q);
+            const agora = new Date();
+
+            for (const docInv of snapshot.docs) {
+                const dadosInv = docInv.data();
+                if (!dadosInv.ultimoPagamento) continue;
+
+                const ultimoPag = dadosInv.ultimoPagamento.toDate();
+                const dataExp = dadosInv.dataExpiracao.toDate();
+
+                if (agora > dataExp) {
+                    await updateDoc(doc(db, "investimentos", docInv.id), { status: "finalizado" });
+                    continue;
+                }
+
+                const diffTime = Math.abs(agora - ultimoPag);
+                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+                if (diffDays >= 1) {
+                    const valorPagar = dadosInv.rendimentoDiario * diffDays;
+                    await updateDoc(doc(db, "usuarios", uidUsuario), {
+                        saldoLucro: increment(valorPagar),
+                        totalEarned: increment(valorPagar)
+                    });
+
+                    await updateDoc(doc(db, "investimentos", docInv.id), {
+                        ultimoPagamento: Timestamp.now()
+                    });
+
+                    await addDoc(collection(db, "historico"), {
+                        userId: uidUsuario,
+                        valor: valorPagar,
+                        tipo: "Rendimento",
+                        descricao: `Rendimento ${diffDays} dia(s) - Plano ${dadosInv.plano}`,
+                        data: Timestamp.now()
+                    });
+                }
+            }
+        } catch (error) { console.error("Erro nos rendimentos:", error); }
+    }
+
+    // Gerador de planos adaptado para renderizar com base na categoria selecionada
+    function gerarPlanos() {
+        const container = document.getElementById('container-planos');
+        const planosFiltrados = listaPlanos.filter(p => p.tier === activeTier);
+
+        container.innerHTML = planosFiltrados.map(p => `
+            <div class="plan-premium-card ${p.ativo ? '' : 'locked-card'}">
+                <div class="card-top-row">
+                    <h3>CONTRATO ${p.nome}</h3>
+                    <div class="badge-cycle">${p.dias} Dias Úteis</div>
+                </div>
+                <div class="price-holder"><small>R$</small>${p.valor.toFixed(2).replace('.', ',')}</div>
+                <div class="metrics-asymmetric-grid">
+                    <div class="metric-cell">
+                        <span>Retorno Diário</span>
+                        <strong>R$ ${p.diario.toFixed(2).replace('.', ',')}</strong>
+                    </div>
+                    <div class="metric-cell">
+                        <span>Fração de Lucro</span>
+                        <strong style="color:var(--gold-accent)">+ ${(p.valor > 0 ? (p.diario / p.valor * 100) : 0).toFixed(1)}% /dia</strong>
+                    </div>
+                </div>
+                <div class="total-yield-box">
+                    <span>Projeção de Retorno Total</span>
+                    <strong>R$ ${p.total.toFixed(2).replace('.', ',')}</strong>
+                </div>
+                <button class="${p.ativo ? 'btn-action-trigger' : 'btn-action-trigger btn-action-locked'}" 
+                    onclick="${p.ativo ? `comprarPlano('${p.nome}', ${p.valor}, ${p.diario}, ${p.dias})` : ''}">
+                    ${p.ativo ? 'Ativar Contrato' : '<i class="fas fa-lock" style="margin-right:5px;"></i> Indisponível'}
+                </button>
+            </div>`).join('');
+    }
+
+    // Função global controladora de troca de abas
+    window.switchTierTab = function(tier) {
+        activeTier = tier;
+        document.querySelectorAll('.tier-tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(`tab-${tier}`).classList.add('active');
+        gerarPlanos();
+    }
+
+    async function processarComissoesRede(valorPlano) {
+        try {
+            const compradorSnap = await getDoc(doc(db, "usuarios", uidUsuario));
+            if (!compradorSnap.exists()) return;
+            
+            const dados = compradorSnap.data();
+            if (dados.jaGerouBonus === true) return;
+
+            const rede = [
+                { id: dados.indicadoPor, pct: 0.10 },      
+                { id: dados.indicadoPorAvo, pct: 0.05 },  
+                { id: dados.indicadoPorBisavo, pct: 0.02 } 
+            ];
+
+            for (let i = 0; i < rede.length; i++) {
+                const indicanteId = rede[i].id;
+                if (indicanteId && indicanteId.trim() !== "") {
+                    let porcentagem = rede[i].pct;
+                    
+                    if (i === 0) { 
+                        const paiSnap = await getDoc(doc(db, "usuarios", indicanteId));
+                        if (paiSnap.exists()) {
+                            const count = paiSnap.data().indicadosCount || 0;
+                            if (count >= 50) porcentagem = 0.20;
+                            else if (count >= 10) porcentagem = 0.15;
+                        }
+                    }
+
+                    const bonus = valorPlano * porcentagem;
+                    await updateDoc(doc(db, "usuarios", indicanteId), {
+                        saldoLucro: increment(bonus),
+                        totalComissoes: increment(bonus)
+                    });
+
+                    await addDoc(collection(db, "historico"), {
+                        userId: indicanteId,
+                        valor: bonus,
+                        tipo: "Indicação",
+                        descricao: `Comissão Nível ${i+1} - Referente a ${dados.nome || 'Novo Membro'}`,
+                        data: Timestamp.now()
+                    });
+                }
+            }
+            await updateDoc(doc(db, "usuarios", uidUsuario), { jaGerouBonus: true });
+        } catch (e) { console.error("Erro no processamento de rede:", e); }
+    }
+
+    window.comprarPlano = async (nome, valor, diario, dias) => {
+        try {
+            await carregarDados();
+
+            if (saldoAtual < valor) {
+                return Swal.fire({ 
+                    icon: 'error', 
+                    title: 'Saldo insuficiente', 
+                    text: 'Você precisa de saldo de depósito para ativar planos.',
+                    background: '#060608', color: '#fff', confirmButtonColor: '#ff3838'
+                });
+            }
+
+            const confirm = await Swal.fire({
+                title: 'Confirmar Ativação?',
+                text: `Deseja ativar o plano ${nome} por R$ ${valor.toFixed(2).replace('.', ',')}?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#2ecc71',
+                cancelButtonColor: '#ff3838',
+                confirmButtonText: 'Confirmar Alocação',
+                cancelButtonText: 'Voltar',
+                background: '#060608', color: '#fff'
+            });
+
+            if (confirm.isConfirmed) {
+                Swal.fire({ 
+                    title: 'Processando...', 
+                    allowOutsideClick: false, 
+                    didOpen: () => Swal.showLoading(), 
+                    background: '#060608', color: '#fff' 
+                });
+
+                const dataExp = new Date();
+                dataExp.setDate(dataExp.getDate() + dias);
+
+                await addDoc(collection(db, "investimentos"), {
+                    userId: uidUsuario,
+                    plano: nome,
+                    valor: valor,
+                    rendimentoDiario: diario,
+                    status: "ativo",
+                    timestamp: Timestamp.now(),
+                    dataExpiracao: Timestamp.fromDate(dataExp),
+                    ultimoPagamento: Timestamp.now()
+                });
+
+                const userRef = doc(db, "usuarios", uidUsuario);
+                const userSnap = await getDoc(userRef);
+                const campoSaldo = userSnap.data().balance !== undefined ? "balance" : "saldo";
+
+                await updateDoc(userRef, { 
+                    [campoSaldo]: increment(-valor) 
+                });
+
+                await addDoc(collection(db, "historico"), {
+                    userId: uidUsuario,
+                    valor: -valor, 
+                    tipo: "Plano Ativado", 
+                    descricao: `Ativação do Plano ${nome}`,
+                    data: Timestamp.now()
+                });
+
+                try {
+                    await processarComissoesRede(valor);
+                } catch (errRede) {
+                    console.error("Erro ao pagar comissões:", errRede);
+                }
+
+                await Swal.fire({ 
+                    icon: 'success', 
+                    title: 'Contrato Ativado!', 
+                    text: 'Seu rendimento começará em 24h.', 
+                    timer: 2000, 
+                    showConfirmButton: false, 
+                    background: '#060608', color: '#fff' 
+                });
+
+                window.location.href = "home.html";
+            }
+        } catch (e) {
+            console.error("ERRO:", e);
+            Swal.fire({ 
+                icon: 'error', 
+                title: 'Falha na Ativação', 
+                text: 'Houve um erro técnico. Verifique seu saldo.', 
+                background: '#060608', color: '#fff' 
+            });
+        }
+    };
+</script>
+</body>
+</html>

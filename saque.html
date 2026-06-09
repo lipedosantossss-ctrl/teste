@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sacar - Nexus</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(180deg, #060b19 0%, #020408 100%);
+            --card-glass: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.07);
+            --blue-primary: #0052ff;
+            --blue-glow: rgba(0, 82, 255, 0.25);
+            --cyan-neon: #00d2ff;
+            --green-success: #00e676;
+            --text-muted: #8a99ad;
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Inter', sans-serif; 
+            outline: none !important; 
+            -webkit-tap-highlight-color: transparent; 
+        }
+
+        body { 
+            background: var(--bg-gradient); 
+            color: white; 
+            padding: 25px 20px; 
+            min-height: 100vh; 
+            overflow-x: hidden;
+        }
+
+        /* Header Subpage */
+        .header { 
+            display: flex; 
+            align-items: center; 
+            margin-bottom: 25px; 
+            gap: 15px; 
+            padding: 5px 0;
+        }
+        .header a { 
+            color: var(--text-muted); 
+            text-decoration: none; 
+            font-size: 1.25rem; 
+            transition: 0.2s; 
+            display: flex;
+            align-items: center;
+        }
+        .header a:active { color: #fff; transform: scale(0.9); }
+        .header span { font-weight: 800; font-size: 1.25rem; letter-spacing: -0.5px; }
+        .header span b { color: var(--cyan-neon); text-shadow: 0 0 10px rgba(0, 210, 255, 0.3); font-weight: 800; }
+
+        /* Card de Saldo Premium */
+        .balance-info { 
+            background: var(--card-glass); 
+            padding: 25px; 
+            border-radius: 24px; 
+            text-align: center; 
+            margin-bottom: 20px; 
+            border: 1px solid var(--card-border); 
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+        .balance-info small { 
+            color: var(--text-muted); 
+            text-transform: uppercase; 
+            font-size: 0.68rem; 
+            letter-spacing: 0.8px; 
+            font-weight: 600; 
+        }
+        .balance-info h2 { 
+            color: #fff; 
+            font-size: 2.1rem; 
+            font-weight: 800; 
+            margin-top: 8px; 
+            letter-spacing: -0.5px; 
+        }
+
+        /* Formulário de Saque */
+        .saque-form { 
+            background: var(--card-glass); 
+            padding: 25px; 
+            border-radius: 24px; 
+            border: 1px solid var(--card-border); 
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        
+        /* Alerta de Horário Integrado */
+        .horario-alerta {
+            background: rgba(0, 82, 255, 0.08);
+            border: 1px solid rgba(0, 210, 255, 0.2);
+            padding: 13px;
+            border-radius: 14px;
+            font-size: 0.78rem;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #fff;
+            font-weight: 500;
+        }
+        .horario-alerta i { color: var(--cyan-neon); margin-right: 6px; }
+
+        .input-group { margin-bottom: 18px; position: relative; }
+        label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-size: 0.72rem; 
+            color: var(--text-muted); 
+            padding-left: 2px; 
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        input { 
+            width: 100%; 
+            padding: 15px; 
+            background: rgba(0,0,0,0.25); 
+            border: 1px solid var(--card-border); 
+            border-radius: 14px; 
+            color: white; 
+            font-size: 0.95rem;
+            transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        input:focus { 
+            border-color: var(--cyan-neon); 
+            background: rgba(0,0,0,0.4); 
+            box-shadow: 0 0 12px rgba(0, 210, 255, 0.15);
+        }
+
+        /* --- MENU DROPDOWN REESTILIZADO --- */
+        .custom-select { position: relative; width: 100%; }
+        
+        .select-button {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0,0,0,0.25);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            color: white;
+            font-size: 0.95rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .select-button.active {
+            border-color: var(--cyan-neon);
+            box-shadow: 0 0 12px rgba(0, 210, 255, 0.15);
+        }
+        .select-button i { color: var(--cyan-neon); transition: 0.3s; }
+        .select-button.active i { transform: rotate(180deg); }
+
+        .options-container {
+            position: absolute;
+            top: 112%;
+            left: 0;
+            width: 100%;
+            background: #060b19;
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            overflow: hidden;
+            display: none;
+            z-index: 100;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+        }
+        .options-container.show {
+            display: block;
+            animation: fadeInDropdown 0.2s ease-out;
+        }
+        @keyframes fadeInDropdown {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .option {
+            padding: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            color: #fff;
+        }
+        .option:last-child { border-bottom: none; }
+        .option:active {
+            background: var(--blue-primary);
+            color: white;
+        }
+
+        /* Display de Taxas Detalhado */
+        .tax-display { 
+            background: rgba(255,255,255,0.01); 
+            padding: 15px; 
+            border-radius: 14px; 
+            margin-bottom: 22px; 
+            font-size: 0.82rem; 
+            border: 1px dashed var(--card-border);
+        }
+        .tax-line { display: flex; justify-content: space-between; margin-bottom: 6px; color: var(--text-muted); }
+        .tax-line span:last-child { color: #fff; font-weight: 600; }
+        .tax-line.total { border-top: 1px solid rgba(255,255,255,0.06); padding-top: 10px; margin-top: 4px; font-weight: 700; }
+        .tax-line.total span:first-child { color: #fff; }
+        .tax-line.total span:last-child { 
+            color: var(--green-success); 
+            font-size: 1.05rem; 
+            text-shadow: 0 0 10px rgba(0,230,118,0.1); 
+        }
+
+        /* Botão de Ação */
+        .btn-sacar { 
+            width: 100%; 
+            padding: 16px; 
+            border-radius: 14px; 
+            border: none; 
+            background: linear-gradient(135deg, var(--blue-primary) 0%, #00d2ff 100%); 
+            color: white; 
+            font-weight: 800; 
+            font-size: 0.95rem; 
+            cursor: pointer; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.2s;
+            box-shadow: 0 6px 20px var(--blue-glow);
+        }
+        .btn-sacar:active { transform: scale(0.96); }
+        .btn-sacar:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <a href="home.html"><i class="fas fa-chevron-left"></i></a>
+        <span><b>Nex</b>us Saque</span>
+    </div>
+
+    <div class="balance-info animate__animated animate__fadeInDown">
+        <small>Disponível para Saque</small>
+        <h2 id="current-balance">R$ 0,00</h2>
+    </div>
+
+    <div class="saque-form animate__animated animate__fadeInUp" style="animation-delay: 0.1s;">
+        <div class="horario-alerta">
+            <i class="fas fa-clock"></i> Horário operacional: 09:00 às 18:00
+        </div>
+
+        <div class="input-group">
+            <label>Tipo de Chave PIX</label>
+            <div class="custom-select">
+                <div class="select-button" id="select-btn">
+                    <span id="selected-value">CPF</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="options-container" id="options-list">
+                    <div class="option" data-value="cpf">CPF</div>
+                    <div class="option" data-value="email">E-mail</div>
+                    <div class="option" data-value="phone">Telefone (Celular)</div>
+                    <div class="option" data-value="evp">Chave Aleatória (EVP)</div>
+                </div>
+                <input type="hidden" id="pix-type" value="cpf">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>Sua Chave PIX</label>
+            <input type="text" id="pix-key" placeholder="Insira a chave de destino">
+        </div>
+
+        <div class="input-group">
+            <label>Valor de Retirada (R$)</label>
+            <input type="number" id="saque-amount" placeholder="Mínimo de 35.00">
+        </div>
+
+        <div class="tax-display">
+            <div class="tax-line"><span>Taxa do Ecossistema (10%):</span> <span id="val-taxa">R$ 0,00</span></div>
+            <div class="tax-line total"><span>Líquido a receber:</span> <span id="val-final">R$ 0,00</span></div>
+        </div>
+
+        <button class="btn-sacar" id="btnPerformSaque">SOLICITAR SAQUE</button>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, updateDoc, collection, addDoc, Timestamp, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDKDFw7khZzM9hIX7xbbrbFQeESiCLnmOw",
+            authDomain: "monety-site-9175f.firebaseapp.com",
+            projectId: "monety-site-9175f",
+            storageBucket: "monety-site-9175f.firebasestorage.app",
+            messagingSenderId: "840821848803",
+            appId: "1:840821848803:web:b99a5528e4bb925518a3d6"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let uidAtual = null;
+        let saldoAtual = 0;
+
+        const selectBtn = document.getElementById('select-btn');
+        const optionsList = document.getElementById('options-list');
+        const selectedValue = document.getElementById('selected-value');
+        const hiddenInput = document.getElementById('pix-type');
+
+        selectBtn.addEventListener('click', () => {
+            selectBtn.classList.toggle('active');
+            optionsList.classList.toggle('show');
+        });
+
+        document.querySelectorAll('.option').forEach(option => {
+            option.addEventListener('click', () => {
+                const value = option.getAttribute('data-value');
+                selectedValue.innerText = option.innerText;
+                hiddenInput.value = value;
+                optionsList.classList.remove('show');
+                selectBtn.classList.remove('active');
+            });
+        });
+
+        window.addEventListener('click', (e) => {
+            if (!selectBtn.contains(e.target)) {
+                optionsList.classList.remove('show');
+                selectBtn.classList.remove('active');
+            }
+        });
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                uidAtual = user.uid;
+                await carregarSaldo();
+            } else { window.location.href = "login.html"; }
+        });
+
+        async function carregarSaldo() {
+            const userDoc = await getDoc(doc(db, "usuarios", uidAtual));
+            if(userDoc.exists()) {
+                saldoAtual = Number(userDoc.data().saldoLucro) || 0;
+                document.getElementById('current-balance').innerText = `R$ ${saldoAtual.toFixed(2)}`;
+            }
+        }
+
+        document.getElementById('saque-amount').addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value) || 0;
+            const taxa = val * 0.10;
+            const final = val - taxa;
+            document.getElementById('val-taxa').innerText = `R$ ${taxa.toFixed(2)}`;
+            document.getElementById('val-final').innerText = `R$ ${final > 0 ? final.toFixed(2) : '0,00'}`;
+        });
+
+        document.getElementById('btnPerformSaque').addEventListener('click', async () => {
+            const agora = new Date();
+            const hora = agora.getHours();
+            
+            if (hora < 9 || hora >= 18) {
+                return Swal.fire({ 
+                    icon: 'warning', 
+                    title: 'Horário Indisponível', 
+                    text: 'Os saques só podem ser realizados entre 09:00 e 18:00.', 
+                    background: '#060b19', 
+                    color: '#fff',
+                    confirmButtonColor: '#0052ff'
+                });
+            }
+
+            const valorSaque = parseFloat(document.getElementById('saque-amount').value);
+            const chavePix = document.getElementById('pix-key').value;
+            const tipoPix = document.getElementById('pix-type').value;
+
+            if (!chavePix) {
+                return Swal.fire({ icon: 'error', title: 'Atenção', text: 'Insira sua chave PIX.', background: '#060b19', color: '#fff', confirmButtonColor: '#0052ff' });
+            }
+            
+            // Validação estrutural corrigida para o mínimo real de R$ 35,00
+            if (isNaN(valorSaque) || valorSaque < 35) {
+                return Swal.fire({ 
+                    icon: 'error', 
+                    title: 'Mínimo insuficiente', 
+                    text: 'O valor mínimo para saque é R$ 35,00.', 
+                    background: '#060b19', 
+                    color: '#fff',
+                    confirmButtonColor: '#0052ff'
+                });
+            }
+
+            if (valorSaque > saldoAtual) {
+                return Swal.fire({ icon: 'error', title: 'Saldo insuficiente', text: 'Você não tem saldo de lucro suficiente para este saque.', background: '#060b19', color: '#fff', confirmButtonColor: '#0052ff' });
+            }
+
+            const btn = document.getElementById('btnPerformSaque');
+            btn.disabled = true;
+            Swal.fire({ title: 'Processando...', allowOutsideClick: false, didOpen: () => Swal.showLoading(), background: '#060b19', color: '#fff' });
+
+            try {
+                const taxa = valorSaque * 0.10;
+                const valorLiquido = valorSaque - taxa;
+                const dataHoje = new Date().toLocaleDateString('pt-BR');
+
+                await updateDoc(doc(db, "usuarios", uidAtual), {
+                    saldoLucro: increment(-valorSaque)
+                });
+
+                await addDoc(collection(db, "saques"), {
+                    userId: uidAtual,
+                    valorSolicitado: Number(valorSaque),
+                    taxaCobrada: taxa,
+                    valorReceber: valorLiquido,
+                    chavePix: chavePix,
+                    pixType: tipoPix,
+                    status: "pendente",
+                    data: dataHoje,
+                    timestamp: Timestamp.now()
+                });
+
+                await Swal.fire({ icon: 'success', title: 'Sucesso!', text: 'Solicitação de saque enviada!', timer: 2500, showConfirmButton: false, background: '#060b19', color: '#fff' });
+                window.location.href = "home.html";
+
+            } catch (error) {
+                console.error(error);
+                Swal.fire({ icon: 'error', title: 'Erro técnico', text: 'Ocorreu um erro ao processar. Tente novamente.', background: '#060b19', color: '#fff', confirmButtonColor: '#0052ff' });
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

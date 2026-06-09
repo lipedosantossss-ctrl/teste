@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Nexus</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        :root {
+            --bg-dark: #070202;
+            --card-glass: rgba(15, 8, 8, 0.7);
+            --red-glow: #ff3838;
+            --red-dark: #b31111;
+            --input-bg: rgba(0, 0, 0, 0.5);
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Inter', sans-serif; 
+            outline: none !important; 
+            -webkit-tap-highlight-color: transparent; 
+        }
+
+        body {
+            background: var(--bg-dark);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Orbes de Luz decorativos ao fundo para dar profundidade real */
+        .glowing-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: 1;
+            opacity: 0.25;
+        }
+        .orb-1 { top: -10%; left: -10%; width: 350px; height: 350px; background: var(--red-glow); }
+        .orb-2 { bottom: -10%; right: -10%; width: 400px; height: 400px; background: #0052cc; }
+
+        .login-wrapper {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 410px;
+        }
+
+        .login-card {
+            background: var(--card-glass);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            padding: 45px 35px;
+            border-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            text-align: center;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+
+        .logo-box {
+            margin-bottom: 35px;
+        }
+
+        .logo {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: white;
+            letter-spacing: -1.5px;
+            display: inline-block;
+        }
+
+        .logo span { color: var(--red-glow); text-shadow: 0 0 20px rgba(255, 56, 56, 0.4); }
+        
+        .login-card p { 
+            color: #8a8a93; 
+            font-size: 0.85rem; 
+            margin-top: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        .input-container {
+            margin-bottom: 18px;
+            position: relative;
+        }
+
+        .input-container i {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #4c4c54;
+            font-size: 1rem;
+            transition: color 0.3s;
+            pointer-events: none;
+        }
+
+        input {
+            width: 100%;
+            padding: 18px 50px 18px 22px;
+            background: var(--input-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            color: white;
+            font-size: 0.95rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        input::placeholder { color: #4c4c54; }
+
+        input:focus { 
+            border-color: rgba(255, 56, 56, 0.5); 
+            background: rgba(10, 3, 3, 0.8);
+            box-shadow: 0 0 20px rgba(255, 56, 56, 0.1), inset 0 1px 0 rgba(255,255,255,0.02);
+        }
+        
+        input:focus + i {
+            color: var(--red-glow);
+        }
+
+        .btn-modern-submit {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--red-glow) 0%, var(--red-dark) 100%);
+            color: white;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-modern-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-modern-submit:active { transform: scale(0.99); }
+
+        .footer-action { 
+            margin-top: 30px; 
+            font-size: 0.85rem; 
+            color: #6c6c74;
+        }
+        .footer-action a { 
+            color: white; 
+            text-decoration: none; 
+            font-weight: 600;
+            border-bottom: 1px dashed var(--red-glow);
+            padding-bottom: 2px;
+            transition: color 0.2s;
+        }
+        .footer-action a:hover { color: var(--red-glow); }
+    </style>
+</head>
+<body>
+
+    <div class="glowing-orb orb-1"></div>
+    <div class="glowing-orb orb-2"></div>
+
+    <div class="login-wrapper">
+        <div class="login-card">
+            <div class="logo-box">
+                <div class="logo"><span>Nex</span>us</div>
+                <p>Entre na sua central de investimentos de alta performance</p>
+            </div>
+
+            <div class="input-container">
+                <input type="email" id="email" placeholder="Endereço de e-mail">
+                <i class="fas fa-envelope"></i>
+            </div>
+
+            <div class="input-container">
+                <input type="password" id="password" placeholder="Senha de acesso">
+                <i class="fas fa-lock"></i>
+            </div>
+
+            <button class="btn-modern-submit" id="btnLogin">
+                <span>CONECTAR MINHA CONTA</span>
+                <i class="fas fa-arrow-right" style="font-size: 0.85rem; position: static; color: inherit; transform: none;"></i>
+            </button>
+
+            <div class="footer-action">
+                Novo por aqui? <a href="registro.html">Criar credenciais</a>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDKDFw7khZzM9hIX7xbbrbFQeESiCLnmOw",
+            authDomain: "monety-site-9175f.firebaseapp.com",
+            projectId: "monety-site-9175f",
+            storageBucket: "monety-site-9175f.firebasestorage.app",
+            messagingSenderId: "840821848803",
+            appId: "1:840821848803:web:b99a5528e4bb925518a3d6"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        document.getElementById('btnLogin').addEventListener('click', async () => {
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const btn = document.getElementById('btnLogin');
+
+            if(!email || !password) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Dados incompletos',
+                    text: 'Preencha seu e-mail e senha.',
+                    background: '#070202',
+                    color: '#fff',
+                    confirmButtonColor: '#ff3838'
+                });
+                return;
+            }
+
+            btn.disabled = true;
+            Swal.fire({
+                title: 'Autenticando...',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); },
+                background: '#070202',
+                color: '#fff'
+            });
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Acesso autorizado!',
+                    showConfirmButton: false,
+                    timer: 1200,
+                    background: '#070202',
+                    color: '#fff'
+                });
+
+                setTimeout(() => {
+                    window.location.href = "home.html";
+                }, 1200);
+
+            } catch (error) {
+                btn.disabled = false;
+                let mensagem = "Verifique seus dados e tente novamente.";
+                
+                if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                    mensagem = "E-mail ou senha inválidos.";
+                } else if (error.code === 'auth/too-many-requests') {
+                    mensagem = "Muitas tentativas. Tente mais tarde.";
+                }
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Falha no acesso',
+                    text: mensagem,
+                    background: '#070202',
+                    color: '#fff',
+                    confirmButtonColor: '#ff3838'
+                });
+            }
+        });
+    </script>
+</body>
+</html>

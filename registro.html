@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Conta - Nexus</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        :root {
+            --bg: radial-gradient(circle at center, #0a1526 0%, #020408 100%);
+            --accent-blue: #0077ff;
+            --accent-glow: rgba(0, 119, 255, 0.25);
+            --white: #ffffff;
+            --text-muted: #8492a6;
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Inter', sans-serif; 
+            outline: none !important; 
+            -webkit-tap-highlight-color: transparent; 
+        }
+
+        body { 
+            background: var(--bg); 
+            color: white; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 100vh; 
+            padding: 20px; 
+        }
+        
+        .reg-container { 
+            width: 100%; 
+            max-width: 390px; 
+            background: rgba(255, 255, 255, 0.03); 
+            padding: 35px 28px; 
+            border-radius: 28px; 
+            border: 1px solid rgba(255, 255, 255, 0.07); 
+            backdrop-filter: blur(16px); 
+            text-align: center; 
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0px rgba(255,255,255,0.05);
+        }
+        
+        .logo { 
+            font-size: 2.2rem; 
+            font-weight: 700; 
+            color: var(--white); 
+            margin-bottom: 4px; 
+            letter-spacing: -1px; 
+        }
+        .logo span { 
+            color: var(--accent-blue); 
+            text-shadow: 0 0 15px var(--accent-glow);
+        }
+        .subtitle { 
+            color: var(--text-muted); 
+            font-size: 0.85rem; 
+            margin-bottom: 30px; 
+            font-weight: 400;
+        }
+
+        .input-group { 
+            margin-bottom: 18px; 
+            text-align: left; 
+            position: relative; 
+        }
+        label { 
+            display: block; 
+            margin-bottom: 6px; 
+            font-size: 0.75rem; 
+            color: var(--text-muted); 
+            padding-left: 4px; 
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            transition: color 0.3s; 
+        }
+        
+        input { 
+            width: 100%; 
+            padding: 15px 16px; 
+            background: rgba(0, 0, 0, 0.35); 
+            border: 1px solid rgba(255, 255, 255, 0.06); 
+            border-radius: 14px; 
+            color: white; 
+            transition: all 0.3s ease; 
+            font-size: 0.95rem; 
+        }
+
+        input::placeholder {
+            color: #4a5568;
+        }
+
+        input:focus { 
+            border-color: var(--accent-blue); 
+            background: rgba(0, 119, 255, 0.03); 
+            box-shadow: 0 0 14px var(--accent-glow);
+        }
+
+        input:focus + label, .input-group:focus-within label {
+            color: var(--accent-blue);
+        }
+
+        .btn-reg { 
+            width: 100%; 
+            padding: 16px; 
+            border-radius: 14px; 
+            border: none; 
+            background: var(--accent-blue); 
+            color: white; 
+            font-weight: 700; 
+            cursor: pointer; 
+            margin-top: 12px; 
+            font-size: 0.95rem; 
+            letter-spacing: 0.5px;
+            transition: all 0.3s; 
+            box-shadow: 0 6px 20px rgba(0, 119, 255, 0.3);
+        }
+        
+        .btn-reg:active { transform: scale(0.98); opacity: 0.9; }
+        .btn-reg:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+
+        .footer-link { 
+            text-align: center; 
+            margin-top: 24px; 
+            font-size: 0.85rem; 
+            color: var(--text-muted);
+        }
+        .footer-link a { 
+            color: var(--accent-blue); 
+            text-decoration: none; 
+            font-weight: 600; 
+            transition: color 0.2s;
+        }
+        .footer-link a:hover {
+            color: #3399ff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reg-container">
+        <div class="logo"><span>Nex</span>us</div>
+        <p class="subtitle">Cadastre-se para começar a lucrar</p>
+        
+        <div class="input-group">
+            <label>Nome Completo</label>
+            <input type="text" id="reg-nome" placeholder="Seu nome">
+        </div>
+
+        <div class="input-group">
+            <label>E-mail</label>
+            <input type="email" id="reg-email" placeholder="seu@email.com">
+        </div>
+
+        <div class="input-group">
+            <label>Senha</label>
+            <input type="password" id="reg-senha" placeholder="Mínimo 6 caracteres">
+        </div>
+
+        <button class="btn-reg" id="btnRegistrar">CADASTRAR AGORA</button>
+
+        <div class="footer-link">
+            Já tem uma conta? <a href="index.html">Fazer Login</a>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, updateDoc, increment, getDoc, collection, addDoc, Timestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDKDFw7khZzM9hIX7xbbrbFQeESiCLnmOw",
+            authDomain: "monety-site-9175f.firebaseapp.com",
+            projectId: "monety-site-9175f",
+            storageBucket: "monety-site-9175f.firebasestorage.app",
+            messagingSenderId: "840821848803",
+            appId: "1:840821848803:web:b99a5528e4bb925518a3d6"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const urlParams = new URLSearchParams(window.location.search);
+        let indicadoPor = urlParams.get('ref');
+        if (indicadoPor) {
+            localStorage.setItem('padrinho', indicadoPor);
+        } else {
+            indicadoPor = localStorage.getItem('padrinho');
+        }
+
+        document.getElementById('btnRegistrar').addEventListener('click', async () => {
+            const nome = document.getElementById('reg-nome').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const senha = document.getElementById('reg-senha').value;
+            const btn = document.getElementById('btnRegistrar');
+
+            if (!nome || !email || senha.length < 6) {
+                return Swal.fire({
+                    icon: 'warning',
+                    title: 'Dados Incompletos',
+                    text: 'Preencha todos os campos corretamente.',
+                    background: '#0a0f1a',
+                    color: '#fff',
+                    confirmButtonColor: '#0077ff'
+                });
+            }
+
+            btn.disabled = true;
+            Swal.fire({
+                title: 'Criando sua conta...',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); },
+                background: '#0a0f1a',
+                color: '#fff'
+            });
+
+            try {
+                let saldoInicial = 0;
+                try {
+                    const bonusSnap = await getDoc(doc(db, "configuracoes", "bonus_cadastro"));
+                    if (bonusSnap.exists()) {
+                        saldoInicial = Number(bonusSnap.data().valor) || 0;
+                    }
+                } catch (e) { console.error("Erro ao buscar bônus:", e); }
+
+                const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
+                const user = userCredential.user;
+
+                let paiId = indicadoPor || null;
+                let avoId = null;
+                let bisavoId = null;
+
+                if (paiId) {
+                    try {
+                        const paiSnap = await getDoc(doc(db, "usuarios", paiId));
+                        if (paiSnap.exists()) {
+                            const paiData = paiSnap.data();
+                            
+                            avoId = paiData.indicadoPor || null;
+                            bisavoId = paiData.indicadoPorAvo || null;
+
+                            await updateDoc(doc(db, "usuarios", paiId), {
+                                indicadosCount: increment(1)
+                            });
+
+                            if (avoId) {
+                                await updateDoc(doc(db, "usuarios", avoId), {
+                                    indicadosL2Count: increment(1)
+                                });
+                            }
+
+                            if (bisavoId) {
+                                await updateDoc(doc(db, "usuarios", bisavoId), {
+                                    indicadosL3Count: increment(1)
+                                });
+                            }
+                        }
+                    } catch (e) { console.error("Erro na linhagem:", e); }
+                }
+
+                await setDoc(doc(db, "usuarios", user.uid), {
+                    nome: nome,
+                    email: email,
+                    saldo: saldoInicial, 
+                    saldoLucro: 0,      
+                    totalGanhos: 0,
+                    totalComissoes: 0,
+                    indicadosCount: 0,   
+                    indicadosL2Count: 0, 
+                    indicadosL3Count: 0, 
+                    indicadoPor: paiId,        
+                    indicadoPorAvo: avoId,     
+                    indicadoPorBisavo: bisavoId, 
+                    uid: user.uid,
+                    status: "ativo",
+                    dataCriacao: new Date().toISOString()
+                });
+
+                if (saldoInicial > 0) {
+                    await addDoc(collection(db, "historico"), {
+                        userId: user.uid,
+                        valor: saldoInicial,
+                        tipo: 'Bônus',
+                        descricao: 'Presente de Boas-Vindas',
+                        data: Timestamp.now()
+                    });
+                }
+
+                localStorage.removeItem('padrinho');
+
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'Conta Criada!',
+                    text: saldoInicial > 0 ? `Você ganhou R$ ${saldoInicial.toFixed(2)} de bônus!` : 'Seja bem-vindo!',
+                    background: '#0a0f1a',
+                    color: '#fff',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+
+                window.location.href = "home.html";
+
+            } catch (error) {
+                btn.disabled = false;
+                let msg = "Erro ao criar conta.";
+                if (error.code === 'auth/email-already-in-use') msg = "E-mail já cadastrado.";
+                
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro',
+                    text: msg,
+                    background: '#0a0f1a',
+                    color: '#fff',
+                    confirmButtonColor: '#0077ff'
+                });
+            }
+        });
+    </script>
+</body>
+</html>

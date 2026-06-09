@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roleta Premiada - Nexus</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(180deg, #020617 0%, #090d16 100%);
+            --card-glass: rgba(30, 41, 59, 0.5);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --blue-primary: #0052ff;
+            --cyan-neon: #00d2ff;
+            --green-success: #00e676;
+            --text-muted: #94a3b8;
+            --gold: #f59e0b;
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Inter', sans-serif; 
+            outline: none !important; 
+            -webkit-tap-highlight-color: transparent; 
+        }
+
+        body { 
+            background: var(--bg-gradient); 
+            color: white; 
+            padding-bottom: 110px; 
+            min-height: 100vh; 
+            overflow-x: hidden; 
+        }
+
+        /* Top Bar */
+        .top-bar { 
+            padding: 25px 20px 15px 20px; 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+        }
+        .btn-back {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            text-decoration: none;
+            width: 42px; height: 42px;
+            background: var(--card-glass);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.2s;
+            backdrop-filter: blur(10px);
+        }
+        .btn-back:active { transform: scale(0.95); }
+        .page-title { font-weight: 700; font-size: 1.2rem; color: #fff; letter-spacing: -0.5px; }
+
+        /* Card de Status de Giros */
+        .spin-status-card {
+            margin: 10px 20px 25px 20px;
+            background: linear-gradient(135deg, rgba(0, 82, 255, 0.15), rgba(0, 210, 255, 0.05));
+            border: 1px solid rgba(0, 210, 255, 0.25);
+            border-radius: 24px;
+            padding: 20px;
+            text-align: center;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        .spin-status-card h3 { font-size: 0.75rem; color: var(--cyan-neon); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; font-weight: 700; }
+        .spin-status-card h2 { font-size: 2.2rem; font-weight: 800; color: #ffffff; display: flex; justify-content: center; align-items: center; gap: 12px;}
+        .spin-status-card h2 i { color: var(--gold); filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.5)); }
+
+        /* Container da Roleta */
+        .roleta-container {
+            position: relative;
+            width: 330px;
+            height: 330px;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Marcador de Prêmio Superior */
+        .pointer {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            font-size: 3rem;
+            color: var(--gold);
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.7));
+            animation: pulsePointer 2s infinite ease-in-out;
+        }
+
+        @keyframes pulsePointer {
+            0%, 100% { top: -12px; }
+            50% { top: -7px; }
+        }
+
+        /* Elemento SVG da Roleta */
+        .wheel-svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(0deg);
+            transition: transform 5s cubic-bezier(0.2, 0.85, 0.25, 1);
+            filter: drop-shadow(0 0 30px rgba(0, 82, 255, 0.25));
+        }
+
+        /* Estilização das Fatias Harmonizadas com o App */
+        .slice-even { fill: #1e293b; stroke: rgba(255,255,255,0.04); stroke-width: 1.5; }
+        .slice-odd { fill: #0f172a; stroke: rgba(255,255,255,0.04); stroke-width: 1.5; }
+        .slice-premium { fill: linear-gradient(135deg, #0052ff, #00d2ff); fill: #0052ff; stroke: rgba(255,255,255,0.1); stroke-width: 1.5; }
+        
+        .prize-text {
+            font-weight: 800;
+            font-size: 13px;
+            fill: #ffffff;
+            letter-spacing: 0.5px;
+        }
+        .prize-text.premium { fill: var(--cyan-neon); }
+
+        /* Botão de Ação */
+        .action-area { text-align: center; margin-top: 35px; padding: 0 20px; }
+        .btn-spin {
+            width: 100%;
+            max-width: 280px;
+            background: linear-gradient(135deg, var(--blue-primary) 0%, var(--cyan-neon) 100%);
+            color: white;
+            font-weight: 800;
+            font-size: 1.1rem;
+            padding: 18px 0;
+            border-radius: 100px;
+            border: none;
+            box-shadow: 0 8px 24px rgba(0, 82, 255, 0.35);
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-spin:active:not(:disabled) { transform: scale(0.96); box-shadow: 0 4px 12px rgba(0, 82, 255, 0.2); }
+        .btn-spin:disabled { background: var(--card-glass); color: var(--text-muted); box-shadow: none; cursor: not-allowed; border: 1px solid var(--card-border); }
+
+        /* Menu Inferior Integrado */
+        .nav-bottom { 
+            position: fixed; bottom: 0; left: 0; width: 100%; 
+            background: rgba(9, 13, 22, 0.9); display: flex; 
+            justify-content: space-around; padding: 12px 0; 
+            border-top: 1px solid rgba(255,255,255,0.05); 
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            z-index: 10000; height: 78px; align-items: center;
+        }
+        .nav-item { color: #64748b; text-align: center; text-decoration: none; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; transition: 0.2s; }
+        .nav-item i { font-size: 1.3rem; }
+        .nav-item span { font-size: 0.7rem; font-weight: 600; }
+        .nav-item.active { color: #fff; }
+        .nav-item.active i { color: var(--cyan-neon); filter: drop-shadow(0 0 8px rgba(0, 210, 255, 0.6)); }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <a href="home.html" class="btn-back"><i class="fas fa-chevron-left"></i></a>
+        <div class="page-title">Roleta de Prêmios</div>
+    </div>
+
+    <div class="spin-status-card animate__animated animate__fadeInDown">
+        <h3>Tokens de Oportunidade</h3>
+        <h2><i class="fas fa-ticket-alt"></i> <span id="giros-count">-</span></h2>
+    </div>
+
+    <div class="roleta-container animate__animated animate__zoomIn">
+        <div class="pointer"><i class="fas fa-caret-down"></i></div>
+        
+        <svg class="wheel-svg" id="wheel" viewBox="0 0 300 300">
+            <defs>
+                <path id="slice-shape" d="M 150 150 L 275.56 77.5 A 145 145 0 0 1 275.56 222.5 Z" />
+            </defs>
+
+            <circle cx="150" cy="150" r="146" fill="none" stroke="rgba(0, 210, 255, 0.15)" stroke-width="4" />
+            
+            <g transform="rotate(270 150 150)">
+                <use href="#slice-shape" class="slice-premium" />
+                <text x="215" y="154" class="prize-text premium" transform="rotate(0 215 154)" text-anchor="middle">R$ 100</text>
+            </g>
+
+            <g transform="rotate(330 150 150)">
+                <use href="#slice-shape" class="slice-odd" />
+                <text x="215" y="154" class="prize-text" transform="rotate(0 215 154)" text-anchor="middle">R$ 10</text>
+            </g>
+
+            <g transform="rotate(30 150 150)">
+                <use href="#slice-shape" class="slice-even" />
+                <text x="215" y="154" class="prize-text" transform="rotate(0 215 154)" text-anchor="middle">Nada</text>
+            </g>
+
+            <g transform="rotate(90 150 150)">
+                <use href="#slice-shape" class="slice-odd" />
+                <text x="215" y="154" class="prize-text" transform="rotate(0 215 154)" text-anchor="middle">R$ 20</text>
+            </g>
+
+            <g transform="rotate(150 150 150)">
+                <use href="#slice-shape" class="slice-even" />
+                <text x="215" y="154" class="prize-text" transform="rotate(0 215 154)" text-anchor="middle">R$ 50</text>
+            </g>
+
+            <g transform="rotate(210 150 150)">
+                <use href="#slice-shape" class="slice-odd" />
+                <text x="215" y="154" class="prize-text" transform="rotate(0 215 154)" text-anchor="middle">R$ 5</text>
+            </g>
+
+            <circle cx="150" cy="150" r="24" fill="#090d16" stroke="var(--cyan-neon)" stroke-width="3" />
+            <circle cx="150" cy="150" r="8" fill="#0052ff" />
+        </svg>
+    </div>
+
+    <div class="action-area animate__animated animate__fadeInUp">
+        <button id="btn-spin" class="btn-spin" disabled>Sincronizando...</button>
+    </div>
+
+    <nav class="nav-bottom">
+        <a href="home.html" class="nav-item"><i class="fas fa-home"></i><span>Início</span></a>
+        <a href="planos.html" class="nav-item"><i class="fas fa-chart-pie"></i><span>Planos</span></a>
+        <a href="indicacao.html" class="nav-item"><i class="fas fa-share-alt"></i><span>Indicar</span></a>
+        <a href="perfil.html" class="nav-item"><i class="fas fa-user-alt"></i><span>Perfil</span></a>
+    </nav>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, onSnapshot, updateDoc, setDoc, increment, addDoc, collection, Timestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDKDFw7khZzM9hIX7xbbrbFQeESiCLnmOw",
+            authDomain: "monety-site-9175f.firebaseapp.com",
+            projectId: "monety-site-9175f",
+            storageBucket: "monety-site-9175f.firebasestorage.app",
+            messagingSenderId: "840821848803",
+            appId: "1:840821848803:web:b99a5528e4bb925518a3d6"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let userDocRef = null;
+        let girosAtuais = 0;
+        let isSpinning = false;
+        let degreesGiroTotal = 0;
+
+        // Ângulos mapeados milimetricamente de acordo com as fatias
+        const premios = [
+            { valor: 100, anguloCentro: 270 },
+            { valor: 10,  anguloCentro: 330 },
+            { valor: 0,   anguloCentro: 30  },
+            { valor: 20,  anguloCentro: 90  },
+            { valor: 50,  anguloCentro: 150 },
+            { valor: 5,   anguloCentro: 210 }
+        ];
+
+        function puxarPremio() {
+            const r = Math.random() * 100;
+            if (r < 48) return premios[2];   // 48% chance: Nada
+            if (r < 78) return premios[5];   // 30% chance: R$ 5
+            if (r < 91) return premios[1];   // 13% chance: R$ 10
+            if (r < 97) return premios[3];   // 6% chance: R$ 20
+            if (r < 99.5) return premios[4]; // 2.5% chance: R$ 50
+            return premios[0];               // 0.5% chance: R$ 100
+        }
+
+        const btnSpin = document.getElementById('btn-spin');
+        const girosDisplay = document.getElementById('giros-count');
+        const wheel = document.getElementById('wheel');
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                userDocRef = doc(db, "usuarios", user.uid);
+                
+                onSnapshot(userDocRef, async (snap) => {
+                    // MECÂNICA 1: Se o usuário acabou de se cadastrar e não existe no banco, cria o registro com 1 giro grátis
+                    if (!snap.exists()) {
+                        await setDoc(userDocRef, {
+                            giros: 1,
+                            saldo: 0,
+                            saldoLucro: 0,
+                            totalGanhos: 0,
+                            status: "ativo"
+                        }, { merge: true });
+
+                        // Salva o log na nova coleção de controle de giros
+                        await addDoc(collection(db, "historico_giros"), {
+                            userId: user.uid,
+                            quantidade: 1,
+                            motivo: "cadastro_inicial",
+                            detalhe: "Bônus de boas-vindas: 1 giro grátis adicionado.",
+                            timestamp: Timestamp.now()
+                        });
+                        return; 
+                    }
+
+                    if (!isSpinning) {
+                        const data = snap.data();
+                        
+                        // Caso o documento exista mas não tenha o campo de giros, evita travar a interface
+                        girosAtuais = data.giros !== undefined ? data.giros : 0;
+                        girosDisplay.innerText = girosAtuais;
+                        
+                        if(girosAtuais > 0) {
+                            btnSpin.disabled = false;
+                            btnSpin.innerText = "Girar Roleta";
+                        } else {
+                            btnSpin.disabled = true;
+                            btnSpin.innerText = "Sem Giros";
+                        }
+                    }
+                });
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+
+        btnSpin.addEventListener('click', async () => {
+            if (girosAtuais <= 0 || isSpinning) return;
+
+            isSpinning = true;
+            btnSpin.disabled = true;
+            btnSpin.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Computando...';
+
+            try {
+                // Deduz o giro imediatamente no banco antes da animação terminar (evita fraudes de duplo clique)
+                await updateDoc(userDocRef, { giros: increment(-1) });
+
+                const sorteado = puxarPremio();
+                
+                // Configuração física da desaceleração no ponto exato
+                const voltasCompletas = 360 * 5; 
+                const ajusteDestino = (270 - sorteado.anguloCentro + 360) % 360;
+                
+                degreesGiroTotal += voltasCompletas + ajusteDestino - (degreesGiroTotal % 360);
+                wheel.style.transform = `rotate(${degreesGiroTotal}deg)`;
+
+                setTimeout(async () => {
+                    isSpinning = false;
+
+                    // Cria histórico do consumo na roleta
+                    await addDoc(collection(db, "historico_giros"), {
+                        userId: auth.currentUser.uid,
+                        quantidade: -1,
+                        motivo: "uso_roleta",
+                        detalhe: sorteado.valor > 0 ? `Ganhou R$ ${sorteado.valor},00` : "Não premiado",
+                        timestamp: Timestamp.now()
+                    });
+
+                    if (sorteado.valor > 0) {
+                        // Aloca o saldo na carteira de rendimentos/saque
+                        await updateDoc(userDocRef, {
+                            saldoLucro: increment(sorteado.valor),
+                            totalGanhos: increment(sorteado.valor)
+                        });
+
+                        // Adiciona ao extrato financeiro unificado do app
+                        await addDoc(collection(db, "historico"), {
+                            userId: auth.currentUser.uid,
+                            valor: sorteado.valor,
+                            tipo: 'Premio Roleta',
+                            data: Timestamp.now()
+                        });
+
+                        Swal.fire({
+                            title: 'Vitória!',
+                            html: `Você faturou <span style="color:var(--green-success);font-weight:700">R$ ${sorteado.valor},00</span> direto na sua conta!`,
+                            icon: 'success',
+                            background: '#0f172a',
+                            color: '#fff',
+                            confirmButtonColor: '#0052ff'
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Quase lá!',
+                            text: 'Sua roleta parou em "Nada". Deposite ou convide amigos para tentar outra vez!',
+                            icon: 'info',
+                            background: '#0f172a',
+                            color: '#fff',
+                            confirmButtonColor: '#0052ff'
+                        });
+                    }
+                    
+                    girosDisplay.innerText = girosAtuais - 1;
+                    if ((girosAtuais - 1) > 0) {
+                        btnSpin.disabled = false;
+                        btnSpin.innerText = "Girar Novamente";
+                    } else {
+                        btnSpin.innerText = "Sem Giros";
+                    }
+
+                }, 5000);
+
+            } catch (err) {
+                console.error(err);
+                isSpinning = false;
+                btnSpin.disabled = false;
+                btnSpin.innerText = "Tentar Novamente";
+            }
+        });
+    </script>
+</body>
+</html>
