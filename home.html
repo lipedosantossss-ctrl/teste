@@ -43,7 +43,6 @@
             overflow-x: hidden; 
         }
 
-        /* MURAL DE AVISO DINÂMICO PREMIUM */
         #container-aviso {
             display: none;
             margin: 15px 20px 5px 20px;
@@ -63,13 +62,11 @@
             100% { box-shadow: 0 0 15px rgba(0, 82, 255, 0.25); border-color: rgba(0, 210, 255, 0.4); }
         }
 
-        /* Top Bar */
         .top-bar { padding: 25px 20px 15px 20px; display: flex; justify-content: space-between; align-items: center; }
         .logo-home { font-weight: 800; font-size: 1.3rem; letter-spacing: -1px; }
         .logo-home span { color: var(--cyan-neon); text-shadow: 0 0 10px rgba(0, 210, 255, 0.3); }
         .user-greeting h2 { font-size: 1.05rem; font-weight: 700; color: #fff; margin-top: 2px; text-transform: capitalize; }
 
-        /* Portfolio Card - Glassmorphism */
         .portfolio-card { 
             margin: 0 20px; 
             background: var(--card-glass); 
@@ -85,19 +82,16 @@
         .balance-main { font-size: 2.1rem; font-weight: 800; color: #fff; display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 5px; letter-spacing: -0.5px; }
         
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
-        .stats-item { background: rgba(0,0,0,0.2); padding: 14px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.02); text-align: left; }
         .stat-item { background: rgba(0,0,0,0.2); padding: 14px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.02); text-align: left; }
         .stat-item span { display: block; font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; font-weight: 500; }
         .stat-item strong { font-size: 0.95rem; color: #fff; font-weight: 700; }
         .stat-item #stat-ganhos { color: var(--green-success); text-shadow: 0 0 10px rgba(0,230,118,0.1); }
 
-        /* VIP Badges */
         .vip-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px; border-radius: 50px; font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
         .vip-bronze { background: linear-gradient(135deg, #b87333, #ff9800); color: white; }
         .vip-ouro { background: linear-gradient(135deg, #eab308, #ffd700); color: #0f172a; }
         .vip-diamante { background: linear-gradient(135deg, #0052ff, #00d2ff); color: white; }
 
-        /* Botões de Ação Principais */
         .actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px 20px 10px 20px; }
         .action-btn { 
             background: var(--card-glass); 
@@ -119,7 +113,6 @@
         .action-btn i { font-size: 1.4rem; color: var(--cyan-neon); filter: drop-shadow(0 0 5px rgba(0, 210, 255, 0.3)); }
         .action-btn:active { transform: scale(0.95); background: rgba(255,255,255,0.06); }
 
-        /* BANNER EXCLUSIVO DA ROLETA FIXADA */
         .roulette-banner {
             margin: 5px 20px 10px 20px;
             background: linear-gradient(135deg, rgba(0, 82, 255, 0.15) 0%, rgba(0, 210, 255, 0.05) 100%);
@@ -164,7 +157,6 @@
             animation: pulseAlert 1.5s infinite alternate;
         }
 
-        /* --- BANNER CHECK-IN DIÁRIO (FOGUINHO) --- */
         .checkin-banner {
             margin: 0 20px 20px 20px;
             background: linear-gradient(135deg, rgba(255, 152, 0, 0.1) 0%, rgba(255, 87, 34, 0.03) 100%);
@@ -205,7 +197,6 @@
             box-shadow: none; border: 1px solid var(--card-border); cursor: not-allowed; 
         }
 
-        /* --- NOVO: CENTRO DE MISSÕES (GAMIFICAÇÃO) --- */
         .quests-banner {
             margin: 0 20px 20px 20px;
             background: linear-gradient(135deg, rgba(0, 210, 255, 0.06) 0%, rgba(0, 82, 255, 0.02) 100%);
@@ -246,7 +237,6 @@
             background: rgba(0, 230, 118, 0.12); color: var(--green-success); border: 1px solid rgba(0, 230, 118, 0.25); padding: 6px 14px; border-radius: 10px; font-weight: 700; font-size: 0.72rem; text-transform: uppercase; display: inline-flex; align-items: center; gap: 4px;
         }
 
-        /* Listas de Investimentos */
         .plans-stack { padding: 12px 20px; display: flex; flex-direction: column; gap: 12px; }
         .active-plan-item { 
             background: var(--card-glass); 
@@ -258,7 +248,6 @@
             backdrop-filter: blur(8px);
         }
         .plan-progress-bg { height: 5px; background: rgba(255,255,255,0.05); border-radius: 10px; width: 100%; margin-top: 14px; overflow: hidden; }
-        
         .plan-progress-bar { 
             height: 100%; 
             background: linear-gradient(90deg, var(--blue-primary), var(--cyan-neon)); 
@@ -267,7 +256,6 @@
             transition: width 1s linear;
         }
 
-        /* Telegram Button */
         .btn-tg {
             position: fixed; bottom: 95px; right: 20px; background: var(--telegram);
             width: 48px; height: 48px; border-radius: 50%; display: flex;
@@ -278,11 +266,9 @@
         }
         .btn-tg:active { transform: scale(0.9); }
 
-        /* Social Pop */
         .social-pop { position: fixed; bottom: 95px; left: 20px; right: 85px; background: #060b19; color: #fff; padding: 12px 16px; border-radius: 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); z-index: 9998; border: 1px solid var(--card-border); backdrop-filter: blur(15px); transform: translateX(-160%); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         .social-pop.show { transform: translateX(0); }
 
-        /* Menu Inferior Estilo Fintech Moderno */
         .nav-bottom { 
             position: fixed; 
             bottom: 0; 
@@ -313,7 +299,6 @@
         }
         .nav-item i { font-size: 1.25rem; }
         .nav-item span { font-size: 0.68rem; font-weight: 500; }
-
         .nav-item.active { color: #fff; }
         .nav-item.active i { color: var(--cyan-neon); filter: drop-shadow(0 0 6px rgba(0, 210, 255, 0.5)); }
         @keyframes pulseAlert { 0% { transform: scale(1); } 100% { transform: scale(1.05); } }
@@ -365,7 +350,7 @@
         <a href="saque.html" class="action-btn"><i class="fas fa-hand-holding-usd"></i>Sacar</a>
     </div>
 
-    <a href="roleta.html" class="roulette-banner">
+    <a href="roleta.html" class="rou roulette-banner">
         <div class="roulette-left">
             <div class="roulette-icon-wrapper">
                 <i class="fas fa-dharmachakra"></i>
@@ -391,15 +376,12 @@
         </button>
     </div>
 
-    <!-- CENTRO DE MISSÕES DIÁRIAS -->
     <div class="quests-banner animate__animated animate__zoomIn" style="animation-delay: 0.3s;">
         <div class="quests-header">
             <div class="quests-title"><i class="fas fa-tasks"></i> Missões Diárias</div>
             <div class="vip-badge" style="background: rgba(0, 210, 255, 0.1); color: var(--cyan-neon); border: 1px solid rgba(0,210,255,0.2); box-shadow: none;">Bônus</div>
         </div>
-        <div id="container-missoes">
-            <!-- Injetado via JavaScript de forma dinâmica -->
-        </div>
+        <div id="container-missoes"></div>
     </div>
 
     <h3 style="padding: 0 25px 5px 25px; font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Meus Contratos Ativos</h3>
@@ -415,7 +397,6 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, query, where, getDocs, updateDoc, addDoc, Timestamp, increment, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, collection, query, where, getDocs, updateDoc, addDoc, Timestamp, increment, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -431,7 +412,6 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- UTILITÁRIOS ---
         let saldoVisivel = localStorage.getItem('saldoVisivel') !== 'false';
 
         function formatarMoeda(valor) {
@@ -439,7 +419,6 @@
             return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor || 0);
         }
 
-        // --- SISTEMA DE DATAS (CHECK-IN) ---
         function getHojeString() {
             const d = new Date();
             return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -450,7 +429,6 @@
             return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         }
 
-        // --- SISTEMA DE NOTIFICAÇÕES (SOCIAL PROOF) ---
         const nomes_pop = ["Marcos S.", "Julia R.", "Phelipe A.", "Ana Paula", "Bruno K.", "Carlos G.", "Diego M."];
         const tipos_pop = ["acabou de sacar", "recebeu lucro de", "ativou um novo plano"];
         function showPop() {
@@ -466,7 +444,6 @@
         }
         setInterval(showPop, 12000);
 
-        // --- MURAL DE AVISO ---
         async function carregarAviso() {
             try {
                 const docRef = doc(db, "configuracoes", "aviso_global");
@@ -478,7 +455,6 @@
             } catch (e) { console.error("Erro aviso:", e); }
         }
 
-        // --- ANIMAÇÃO DE PROGRESSO ---
         function iniciarAnimacaoProgresso() {
             const interval = setInterval(() => {
                 const agora = new Date().getTime();
@@ -498,7 +474,6 @@
             }, 1000);
         }
 
-        // --- ESCUTA EM TEMPO REAL ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 onSnapshot(doc(db, "usuarios", user.uid), async (docSnap) => {
@@ -509,7 +484,6 @@
                             return;
                         }
                         
-                        // Lógica Automática de Reset Diário das Missões
                         const hoje = getHojeString();
                         if (userData.ultimaMissaoReset !== hoje) {
                             await updateDoc(doc(db, "usuarios", user.uid), {
@@ -522,7 +496,6 @@
 
                         document.getElementById('home-nome').innerText = `Olá, ${userData.nome || "Investidor"}`;
                         
-                        // Roleta Badge Atualização
                         const girosAtuais = userData.giros || 0;
                         const badgeRoleta = document.getElementById('roleta-badge');
                         if (girosAtuais > 0) {
@@ -533,10 +506,8 @@
                             badgeRoleta.className = "roulette-badge";
                         }
 
-                        // Atualiza Interface de Check-in Diário
                         atualizarInterfaceCheckin(userData);
 
-                        // Cálculo Financeiro Integrado
                         const saldoPrincipal = Number(userData.saldo) || 0;
                         const saldoLucro = Number(userData.saldoLucro) || 0;
                         const totalGanhos = Number(userData.totalGanhos) || 0;
@@ -573,7 +544,6 @@
             }
         });
 
-        // --- LÓGICA DE CHECK-IN DIÁRIO (FOGUINHO) ---
         function atualizarInterfaceCheckin(userData) {
             const hoje = getHojeString();
             const ontem = getOntemString();
@@ -598,13 +568,11 @@
 
             for (let i = 1; i <= 7; i++) {
                 let statusClass = '';
-                
                 if (i <= diaVisualAtual) {
                     statusClass = 'active'; 
                 } else if (!isFezHoje && i === diaVisualAtual + 1) {
                     statusClass = 'pending'; 
                 }
-
                 htmlDias += `
                 <div class="day-box ${statusClass}">
                     <i class="fas fa-fire"></i>
@@ -625,33 +593,18 @@
                 btn.onclick = async () => {
                     btn.disabled = true;
                     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
-                    
                     try {
                         const uid = auth.currentUser.uid;
-                        
                         await updateDoc(doc(db, "usuarios", uid), {
                             streakCheckin: proximoStreak,
                             ultimoCheckin: hoje,
                             saldoLucro: increment(proximaRecompensa),
                             totalGanhos: increment(proximaRecompensa)
                         });
-
                         await addDoc(collection(db, "historico"), {
-                            userId: uid,
-                            valor: proximaRecompensa,
-                            tipo: `Check-in Diário (${proximoStreak}º dia)`,
-                            data: Timestamp.now()
+                            userId: uid, valor: proximaRecompensa, tipo: `Check-in Diário (${proximoStreak}º dia)`, data: Timestamp.now()
                         });
-
-                        Swal.fire({
-                            title: 'Recompensa Diária!',
-                            html: `Você resgatou <b style="color:var(--green-success)">R$ ${proximaRecompensa.toFixed(2)}</b> pelo seu <b>${proximoStreak}º</b> dia consecutivo!`,
-                            icon: 'success',
-                            background: '#060b19',
-                            color: '#fff',
-                            confirmButtonColor: '#ff5722'
-                        });
-
+                        Swal.fire({ title: 'Recompensa Diária!', html: `Você resgatou <b style="color:var(--green-success)">R$ ${proximaRecompensa.toFixed(2)}</b> pelo seu <b>${proximoStreak}º</b> dia consecutivo!`, icon: 'success', background: '#060b19', color: '#fff', confirmButtonColor: '#ff5722' });
                     } catch(err) {
                         console.error(err);
                         Swal.fire('Erro', 'Falha ao processar check-in.', 'error');
@@ -662,7 +615,6 @@
             }
         }
 
-        // --- SISTEMA DE MISSÕES DIÁRIAS (INTEGRAÇÃO DINÂMICA) ---
         function atualizarMissoes(userData, totalInvestido) {
             const hoje = getHojeString();
             const isFezHoje = (userData.ultimoCheckin === hoje);
@@ -671,13 +623,11 @@
 
             const m1Concluida = totalInvestido > 0;
             const m1Coletada = userData.missao1Coletada === true;
-
             const m2Concluida = isFezHoje;
             const m2Coletada = userData.missao2Coletada === true;
 
             let html = '';
 
-            // Missão 1: Investidor Ativo
             html += `
             <div class="quest-item">
                 <div class="quest-info">
@@ -695,7 +645,6 @@
             }
             html += `</div></div>`;
 
-            // Missão 2: Foco Diário
             html += `
             <div class="quest-item">
                 <div class="quest-info">
@@ -715,7 +664,6 @@
 
             container.innerHTML = html;
 
-            // Evento da Missão 1
             const btnM1 = document.getElementById('btn-m1');
             if (btnM1) {
                 btnM1.onclick = async () => {
@@ -723,19 +671,13 @@
                     btnM1.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
                     try {
                         const uid = auth.currentUser.uid;
-                        await updateDoc(doc(db, "usuarios", uid), {
-                            missao1Coletada: true,
-                            giros: increment(1)
-                        });
-                        await addDoc(collection(db, "historico"), {
-                            userId: uid, valor: 0, tipo: 'Missão: Investidor Ativo', data: Timestamp.now()
-                        });
+                        await updateDoc(doc(db, "usuarios", uid), { missao1Coletada: true, giros: increment(1) });
+                        await addDoc(collection(db, "historico"), { userId: uid, valor: 0, tipo: 'Missão: Investidor Ativo', data: Timestamp.now() });
                         Swal.fire({ title: 'Sucesso!', text: 'Você resgatou +1 Giro Grátis na Roleta!', icon: 'success', background: '#060b19', color: '#fff', confirmButtonColor: '#0052ff' });
                     } catch(e) { console.error(e); btnM1.disabled = false; btnM1.innerText = 'Resgatar'; }
                 };
             }
 
-            // Evento da Missão 2
             const btnM2 = document.getElementById('btn-m2');
             if (btnM2) {
                 btnM2.onclick = async () => {
@@ -743,14 +685,8 @@
                     btnM2.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
                     try {
                         const uid = auth.currentUser.uid;
-                        await updateDoc(doc(db, "usuarios", uid), {
-                            missao2Coletada: true,
-                            saldoLucro: increment(1),
-                            totalGanhos: increment(1)
-                        });
-                        await addDoc(collection(db, "historico"), {
-                            userId: uid, valor: 1, tipo: 'Missão: Foco Diário', data: Timestamp.now()
-                        });
+                        await updateDoc(doc(db, "usuarios", uid), { missao2Coletada: true, saldoLucro: increment(1), totalGanhos: increment(1) });
+                        await addDoc(collection(db, "historico"), { userId: uid, valor: 1, tipo: 'Missão: Foco Diário', data: Timestamp.now() });
                         Swal.fire({ title: 'Sucesso!', text: 'R$ 1,00 creditado no seu saldo de saque!', icon: 'success', background: '#060b19', color: '#fff', confirmButtonColor: '#0052ff' });
                     } catch(e) { console.error(e); btnM2.disabled = false; btnM2.innerText = 'Resgatar'; }
                 };
@@ -801,10 +737,8 @@
                 document.getElementById('lista-investimentos').innerHTML = htmlContent || '<p style="text-align:center; color:var(--text-muted); font-size:0.82rem; margin-top:20px;">Nenhum contrato em andamento.</p>';
                 document.getElementById('stat-investido').innerText = formatarMoeda(totalInvestido);
                 
-                // Atualiza o Centro de Missões passando os dados estruturados de investimento
                 if(userData) atualizarMissoes(userData, totalInvestido);
 
-                // Atualiza Badge VIP de Acordo com o Volume
                 const vipTag = document.getElementById('vip-tag');
                 const vipNome = document.getElementById('vip-nome');
                 if (totalInvestido >= 2000) { vipTag.className = "vip-badge vip-diamante"; vipNome.innerText = "VIP Diamante"; }
