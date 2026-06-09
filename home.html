@@ -85,6 +85,7 @@
         .balance-main { font-size: 2.1rem; font-weight: 800; color: #fff; display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 5px; letter-spacing: -0.5px; }
         
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
+        .stats-item { background: rgba(0,0,0,0.2); padding: 14px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.02); text-align: left; }
         .stat-item { background: rgba(0,0,0,0.2); padding: 14px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.02); text-align: left; }
         .stat-item span { display: block; font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; font-weight: 500; }
         .stat-item strong { font-size: 0.95rem; color: #fff; font-weight: 700; }
@@ -163,7 +164,7 @@
             animation: pulseAlert 1.5s infinite alternate;
         }
 
-        /* --- NOVO: BANNER CHECK-IN DIÁRIO (FOGUINHO) --- */
+        /* --- BANNER CHECK-IN DIÁRIO (FOGUINHO) --- */
         .checkin-banner {
             margin: 0 20px 20px 20px;
             background: linear-gradient(135deg, rgba(255, 152, 0, 0.1) 0%, rgba(255, 87, 34, 0.03) 100%);
@@ -202,6 +203,47 @@
         .btn-checkin:disabled { 
             background: rgba(255,255,255,0.05); color: var(--text-muted); 
             box-shadow: none; border: 1px solid var(--card-border); cursor: not-allowed; 
+        }
+
+        /* --- NOVO: CENTRO DE MISSÕES (GAMIFICAÇÃO) --- */
+        .quests-banner {
+            margin: 0 20px 20px 20px;
+            background: linear-gradient(135deg, rgba(0, 210, 255, 0.06) 0%, rgba(0, 82, 255, 0.02) 100%);
+            border: 1px solid rgba(0, 210, 255, 0.15);
+            border-radius: 20px;
+            padding: 18px 20px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .quests-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+        .quests-title { font-weight: 800; font-size: 0.95rem; display: flex; align-items: center; gap: 8px; color: #fff; }
+        .quests-title i { color: var(--cyan-neon); font-size: 1.1rem; }
+        .quest-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            padding: 12px 14px;
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+        .quest-info { text-align: left; }
+        .quest-info h4 { font-size: 0.82rem; font-weight: 700; color: #fff; }
+        .quest-info p { font-size: 0.68rem; color: var(--text-muted); margin-top: 1px; }
+        .quest-reward { color: var(--green-success); font-weight: 700; font-size: 0.68rem; display: flex; align-items: center; gap: 4px; margin-top: 3px; }
+        .btn-quest-claim {
+            background: linear-gradient(135deg, var(--blue-primary), var(--cyan-neon));
+            color: white; border: none; padding: 6px 14px; border-radius: 10px;
+            font-weight: 700; font-size: 0.72rem; cursor: pointer; text-transform: uppercase;
+            box-shadow: 0 4px 10px var(--blue-glow); transition: 0.2s;
+        }
+        .btn-quest-claim:disabled {
+            background: rgba(255,255,255,0.05); color: var(--text-muted); box-shadow: none; border: 1px solid var(--card-border); cursor: not-allowed;
+        }
+        .btn-quest-done {
+            background: rgba(0, 230, 118, 0.12); color: var(--green-success); border: 1px solid rgba(0, 230, 118, 0.25); padding: 6px 14px; border-radius: 10px; font-weight: 700; font-size: 0.72rem; text-transform: uppercase; display: inline-flex; align-items: center; gap: 4px;
         }
 
         /* Listas de Investimentos */
@@ -342,12 +384,22 @@
             <div id="badge-streak" class="vip-badge" style="background: rgba(255, 152, 0, 0.15); color: #ff9800; border: 1px solid rgba(255,152,0,0.3); box-shadow: none;">0 Dias</div>
         </div>
         
-        <div class="checkin-days" id="checkin-days-container">
-            </div>
+        <div class="checkin-days" id="checkin-days-container"></div>
         
         <button id="btn-checkin" class="btn-checkin" disabled>
             <i class="fas fa-spinner fa-spin"></i> Sincronizando...
         </button>
+    </div>
+
+    <!-- CENTRO DE MISSÕES DIÁRIAS -->
+    <div class="quests-banner animate__animated animate__zoomIn" style="animation-delay: 0.3s;">
+        <div class="quests-header">
+            <div class="quests-title"><i class="fas fa-tasks"></i> Missões Diárias</div>
+            <div class="vip-badge" style="background: rgba(0, 210, 255, 0.1); color: var(--cyan-neon); border: 1px solid rgba(0,210,255,0.2); box-shadow: none;">Bônus</div>
+        </div>
+        <div id="container-missoes">
+            <!-- Injetado via JavaScript de forma dinâmica -->
+        </div>
     </div>
 
     <h3 style="padding: 0 25px 5px 25px; font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Meus Contratos Ativos</h3>
@@ -363,6 +415,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, query, where, getDocs, updateDoc, addDoc, Timestamp, increment, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, collection, query, where, getDocs, updateDoc, addDoc, Timestamp, increment, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -448,7 +501,7 @@
         // --- ESCUTA EM TEMPO REAL ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                onSnapshot(doc(db, "usuarios", user.uid), (docSnap) => {
+                onSnapshot(doc(db, "usuarios", user.uid), async (docSnap) => {
                     if (docSnap.exists()) {
                         const userData = docSnap.data();
                         if (userData.status === "bloqueado") {
@@ -456,6 +509,17 @@
                             return;
                         }
                         
+                        // Lógica Automática de Reset Diário das Missões
+                        const hoje = getHojeString();
+                        if (userData.ultimaMissaoReset !== hoje) {
+                            await updateDoc(doc(db, "usuarios", user.uid), {
+                                missao1Coletada: false,
+                                missao2Coletada: false,
+                                ultimaMissaoReset: hoje
+                            });
+                            return; 
+                        }
+
                         document.getElementById('home-nome').innerText = `Olá, ${userData.nome || "Investidor"}`;
                         
                         // Roleta Badge Atualização
@@ -492,10 +556,10 @@
                             saldoVisivel = !saldoVisivel;
                             localStorage.setItem('saldoVisivel', saldoVisivel);
                             atualizarElementosSaldo();
-                            carregarInvestimentos(user.uid);
+                            carregarInvestimentos(user.uid, userData);
                         };
 
-                        carregarInvestimentos(user.uid);
+                        carregarInvestimentos(user.uid, userData);
                         carregarAviso();
                         
                         if (!window.processamentoInicialRealizado) {
@@ -514,35 +578,31 @@
             const hoje = getHojeString();
             const ontem = getOntemString();
             
-            // Corrige e lê streak atual
             let streak = userData.streakCheckin || 0;
             let ultimoCheckin = userData.ultimoCheckin || "";
 
-            // Regra principal de quebra de streak: Se não acessou hoje e não acessou ontem, perdeu a sequência.
             if (ultimoCheckin !== hoje && ultimoCheckin !== ontem && streak > 0) {
                 streak = 0; 
             }
 
             const isFezHoje = (ultimoCheckin === hoje);
             const proximoStreak = isFezHoje ? streak : streak + 1;
-            const proximaRecompensa = proximoStreak * 0.50; // 50 centavos por dia multiplicado pela sequência
+            const proximaRecompensa = proximoStreak * 0.50; 
 
             document.getElementById('badge-streak').innerHTML = `<i class="fas fa-fire"></i> ${streak} Dias`;
             
-            // Monta as 7 caixinhas de dias visualmente
             const containerDias = document.getElementById('checkin-days-container');
             let htmlDias = '';
             
-            // Calcula em que ciclo de 7 dias o usuário está para mostrar a barra corretamente
             const diaVisualAtual = (streak % 7 === 0 && streak > 0 && isFezHoje) ? 7 : streak % 7; 
 
             for (let i = 1; i <= 7; i++) {
                 let statusClass = '';
                 
                 if (i <= diaVisualAtual) {
-                    statusClass = 'active'; // Dias já pegos no ciclo
+                    statusClass = 'active'; 
                 } else if (!isFezHoje && i === diaVisualAtual + 1) {
-                    statusClass = 'pending'; // O dia de HOJE pronto pra pegar
+                    statusClass = 'pending'; 
                 }
 
                 htmlDias += `
@@ -553,7 +613,6 @@
             }
             containerDias.innerHTML = htmlDias;
 
-            // Configura o Botão
             const btn = document.getElementById('btn-checkin');
             if (isFezHoje) {
                 btn.disabled = true;
@@ -563,7 +622,6 @@
                 btn.disabled = false;
                 btn.innerHTML = `🔥 Resgatar + R$ ${proximaRecompensa.toFixed(2)}`;
                 
-                // Evento de Clique para Resgate
                 btn.onclick = async () => {
                     btn.disabled = true;
                     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
@@ -604,7 +662,102 @@
             }
         }
 
-        async function carregarInvestimentos(uid) {
+        // --- SISTEMA DE MISSÕES DIÁRIAS (INTEGRAÇÃO DINÂMICA) ---
+        function atualizarMissoes(userData, totalInvestido) {
+            const hoje = getHojeString();
+            const isFezHoje = (userData.ultimoCheckin === hoje);
+            const container = document.getElementById('container-missoes');
+            if(!container) return;
+
+            const m1Concluida = totalInvestido > 0;
+            const m1Coletada = userData.missao1Coletada === true;
+
+            const m2Concluida = isFezHoje;
+            const m2Coletada = userData.missao2Coletada === true;
+
+            let html = '';
+
+            // Missão 1: Investidor Ativo
+            html += `
+            <div class="quest-item">
+                <div class="quest-info">
+                    <h4>💼 Investidor Ativo</h4>
+                    <p>Mantenha pelo menos 1 contrato ativo</p>
+                    <div class="quest-reward"><i class="fas fa-dharmachakra"></i> +1 Giro Grátis</div>
+                </div>
+                <div>`;
+            if (m1Coletada) {
+                html += `<span class="btn-quest-done"><i class="fas fa-check"></i> Coletado</span>`;
+            } else if (m1Concluida) {
+                html += `<button class="btn-quest-claim" id="btn-m1">Resgatar</button>`;
+            } else {
+                html += `<button class="btn-quest-claim" disabled>0/1</button>`;
+            }
+            html += `</div></div>`;
+
+            // Missão 2: Foco Diário
+            html += `
+            <div class="quest-item">
+                <div class="quest-info">
+                    <h4>🔥 Foco Diário</h4>
+                    <p>Conclua o Check-in Diário de hoje</p>
+                    <div class="quest-reward"><i class="fas fa-wallet"></i> +R$ 1,00 Saldo</div>
+                </div>
+                <div>`;
+            if (m2Coletada) {
+                html += `<span class="btn-quest-done"><i class="fas fa-check"></i> Coletado</span>`;
+            } else if (m2Concluida) {
+                html += `<button class="btn-quest-claim" id="btn-m2">Resgatar</button>`;
+            } else {
+                html += `<button class="btn-quest-claim" disabled>0/1</button>`;
+            }
+            html += `</div></div>`;
+
+            container.innerHTML = html;
+
+            // Evento da Missão 1
+            const btnM1 = document.getElementById('btn-m1');
+            if (btnM1) {
+                btnM1.onclick = async () => {
+                    btnM1.disabled = true;
+                    btnM1.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                    try {
+                        const uid = auth.currentUser.uid;
+                        await updateDoc(doc(db, "usuarios", uid), {
+                            missao1Coletada: true,
+                            giros: increment(1)
+                        });
+                        await addDoc(collection(db, "historico"), {
+                            userId: uid, valor: 0, tipo: 'Missão: Investidor Ativo', data: Timestamp.now()
+                        });
+                        Swal.fire({ title: 'Sucesso!', text: 'Você resgatou +1 Giro Grátis na Roleta!', icon: 'success', background: '#060b19', color: '#fff', confirmButtonColor: '#0052ff' });
+                    } catch(e) { console.error(e); btnM1.disabled = false; btnM1.innerText = 'Resgatar'; }
+                };
+            }
+
+            // Evento da Missão 2
+            const btnM2 = document.getElementById('btn-m2');
+            if (btnM2) {
+                btnM2.onclick = async () => {
+                    btnM2.disabled = true;
+                    btnM2.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                    try {
+                        const uid = auth.currentUser.uid;
+                        await updateDoc(doc(db, "usuarios", uid), {
+                            missao2Coletada: true,
+                            saldoLucro: increment(1),
+                            totalGanhos: increment(1)
+                        });
+                        await addDoc(collection(db, "historico"), {
+                            userId: uid, valor: 1, tipo: 'Missão: Foco Diário', data: Timestamp.now()
+                        });
+                        Swal.fire({ title: 'Sucesso!', text: 'R$ 1,00 creditado no seu saldo de saque!', icon: 'success', background: '#060b19', color: '#fff', confirmButtonColor: '#0052ff' });
+                    } catch(e) { console.error(e); btnM2.disabled = false; btnM2.innerText = 'Resgatar'; }
+                };
+            }
+        }
+
+        async function carregarInvestimentos(uid, userData) {
             try {
                 const q = query(collection(db, "investimentos"), where("userId", "==", uid), where("status", "==", "ativo"));
                 const snap = await getDocs(q);
@@ -648,6 +801,9 @@
                 document.getElementById('lista-investimentos').innerHTML = htmlContent || '<p style="text-align:center; color:var(--text-muted); font-size:0.82rem; margin-top:20px;">Nenhum contrato em andamento.</p>';
                 document.getElementById('stat-investido').innerText = formatarMoeda(totalInvestido);
                 
+                // Atualiza o Centro de Missões passando os dados estruturados de investimento
+                if(userData) atualizarMissoes(userData, totalInvestido);
+
                 // Atualiza Badge VIP de Acordo com o Volume
                 const vipTag = document.getElementById('vip-tag');
                 const vipNome = document.getElementById('vip-nome');
