@@ -350,7 +350,7 @@
         <a href="saque.html" class="action-btn"><i class="fas fa-hand-holding-usd"></i>Sacar</a>
     </div>
 
-    <a href="roleta.html" class="rou roulette-banner">
+    <a href="roleta.html" class="roulette-banner">
         <div class="roulette-left">
             <div class="roulette-icon-wrapper">
                 <i class="fas fa-dharmachakra"></i>
@@ -378,7 +378,7 @@
 
     <div class="quests-banner animate__animated animate__zoomIn" style="animation-delay: 0.3s;">
         <div class="quests-header">
-            <div class="quests-title"><i class="fas fa-tasks"></i> Missões Diárias</div>
+            <div class="quests-title"><i class="fas fa-tasks"></i> Missões de Evolução</div>
             <div class="vip-badge" style="background: rgba(0, 210, 255, 0.1); color: var(--cyan-neon); border: 1px solid rgba(0,210,255,0.2); box-shadow: none;">Bônus</div>
         </div>
         <div id="container-missoes"></div>
@@ -485,6 +485,7 @@
                         }
                         
                         const hoje = getHojeString();
+                        // Reset diário das missões 1 e 2
                         if (userData.ultimaMissaoReset !== hoje) {
                             await updateDoc(doc(db, "usuarios", user.uid), {
                                 missao1Coletada: false,
@@ -621,13 +622,19 @@
             const container = document.getElementById('container-missoes');
             if(!container) return;
 
-            const m1Concluida = totalInvestido > 0;
+            const totalIndicados = userData.indicadosCount || 0; 
+
+            // Estado das coletas mapeadas do banco de dados
             const m1Coletada = userData.missao1Coletada === true;
-            const m2Concluida = isFezHoje;
             const m2Coletada = userData.missao2Coletada === true;
+            const m3Coletada = userData.missao3Coletada === true;
+            const m4Coletada = userData.missao4Coletada === true;
+            const m5Coletada = userData.missao5Coletada === true;
+            const m6Coletada = userData.missao6Coletada === true;
 
             let html = '';
 
+            // --- MISSÃO 1: INVESTIDOR ATIVO ---
             html += `
             <div class="quest-item">
                 <div class="quest-info">
@@ -638,59 +645,154 @@
                 <div>`;
             if (m1Coletada) {
                 html += `<span class="btn-quest-done"><i class="fas fa-check"></i> Coletado</span>`;
-            } else if (m1Concluida) {
+            } else if (totalInvestido > 0) {
                 html += `<button class="btn-quest-claim" id="btn-m1">Resgatar</button>`;
             } else {
                 html += `<button class="btn-quest-claim" disabled>0/1</button>`;
             }
             html += `</div></div>`;
 
-            html += `
-            <div class="quest-item">
-                <div class="quest-info">
-                    <h4>🔥 Foco Diário</h4>
-                    <p>Conclua o Check-in Diário de hoje</p>
-                    <div class="quest-reward"><i class="fas fa-wallet"></i> +R$ 1,00 Saldo</div>
-                </div>
-                <div>`;
-            if (m2Coletada) {
-                html += `<span class="btn-quest-done"><i class="fas fa-check"></i> Coletado</span>`;
-            } else if (m2Concluida) {
-                html += `<button class="btn-quest-claim" id="btn-m2">Resgatar</button>`;
+            // --- LÓGICA DE FILA ENCADEADA (DA 2 ATÉ A 6) ---
+            if (!m2Coletada) {
+                // MISSÃO 2: CHECK-IN
+                html += `
+                <div class="quest-item animate__animated animate__fadeIn">
+                    <div class="quest-info">
+                        <h4>🔥 Foco Diário</h4>
+                        <p>Conclua o Check-in Diário de hoje</p>
+                        <div class="quest-reward"><i class="fas fa-wallet"></i> +R$ 1,00 Saldo</div>
+                    </div>
+                    <div>`;
+                if (isFezHoje) {
+                    html += `<button class="btn-quest-claim" id="btn-m2">Resgatar</button>`;
+                } else {
+                    html += `<button class="btn-quest-claim" disabled>0/1</button>`;
+                }
+                html += `</div></div>`;
+
+            } else if (!m3Coletada) {
+                // MISSÃO 3: INDICAR 1 AMIGO 
+                html += `
+                <div class="quest-item animate__animated animate__fadeInUp">
+                    <div class="quest-info">
+                        <h4>👥 Líder Iniciante</h4>
+                        <p>Indique 1 amigo para a plataforma</p>
+                        <div class="quest-reward"><i class="fas fa-wallet"></i> +R$ 2,00 Saldo</div>
+                    </div>
+                    <div>`;
+                if (totalIndicados >= 1) { 
+                    html += `<button class="btn-quest-claim" id="btn-m3">Resgatar</button>`;
+                } else {
+                    html += `<button class="btn-quest-claim" disabled>${totalIndicados}/1</button>`; 
+                }
+                html += `</div></div>`;
+
+            } else if (!m4Coletada) {
+                // MISSÃO 4: INDICAR 3 AMIGOS 
+                html += `
+                <div class="quest-item animate__animated animate__fadeInUp">
+                    <div class="quest-info">
+                        <h4>📢 Rede em Expansão</h4>
+                        <p>Alcance um total de 3 indicados diretos</p>
+                        <div class="quest-reward"><i class="fas fa-wallet"></i> +R$ 5,00 Saldo</div>
+                    </div>
+                    <div>`;
+                if (totalIndicados >= 3) { 
+                    html += `<button class="btn-quest-claim" id="btn-m4">Resgatar</button>`;
+                } else {
+                    html += `<button class="btn-quest-claim" disabled>${totalIndicados}/3</button>`; 
+                }
+                html += `</div></div>`;
+
+            } else if (!m5Coletada) {
+                // MISSÃO 5: INDICAR 5 AMIGOS 
+                html += `
+                <div class="quest-item animate__animated animate__fadeInUp">
+                    <div class="quest-info">
+                        <h4>💎 Magnata da Rede</h4>
+                        <p>Alcance um total de 5 indicados diretos</p>
+                        <div class="quest-reward"><i class="fas fa-dharmachakra"></i> +10 Giros Grátis</div>
+                    </div>
+                    <div>`;
+                if (totalIndicados >= 5) { 
+                    html += `<button class="btn-quest-claim" id="btn-m5">Resgatar</button>`;
+                } else {
+                    html += `<button class="btn-quest-claim" disabled>${totalIndicados}/5</button>`; 
+                }
+                html += `</div></div>`;
+
             } else {
-                html += `<button class="btn-quest-claim" disabled>0/1</button>`;
+                // MISSÃO 6: SUPER LÍDER (Última da cadeia) 
+                html += `
+                <div class="quest-item animate__animated animate__fadeInUp">
+                    <div class="quest-info">
+                        <h4>👑 Embaixador Nexus</h4>
+                        <p>Alcance a marca de 10 indicados diretos</p>
+                        <div class="quest-reward"><i class="fas fa-wallet"></i> +R$ 20,00 Saldo</div>
+                    </div>
+                    <div>`;
+                if (m6Coletada) {
+                    html += `<span class="btn-quest-done"><i class="fas fa-check"></i> Todas Concluídas!</span>`;
+                } else if (totalIndicados >= 10) { 
+                    html += `<button class="btn-quest-claim" id="btn-m6">Resgatar</button>`;
+                } else {
+                    html += `<button class="btn-quest-claim" disabled>${totalIndicados}/10</button>`; 
+                }
+                html += `</div></div>`;
             }
-            html += `</div></div>`;
 
             container.innerHTML = html;
 
-            const btnM1 = document.getElementById('btn-m1');
-            if (btnM1) {
-                btnM1.onclick = async () => {
-                    btnM1.disabled = true;
-                    btnM1.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-                    try {
-                        const uid = auth.currentUser.uid;
-                        await updateDoc(doc(db, "usuarios", uid), { missao1Coletada: true, giros: increment(1) });
-                        await addDoc(collection(db, "historico"), { userId: uid, valor: 0, tipo: 'Missão: Investidor Ativo', data: Timestamp.now() });
-                        Swal.fire({ title: 'Sucesso!', text: 'Você resgatou +1 Giro Grátis na Roleta!', icon: 'success', background: '#060b19', color: '#fff', confirmButtonColor: '#0052ff' });
-                    } catch(e) { console.error(e); btnM1.disabled = false; btnM1.innerText = 'Resgatar'; }
-                };
-            }
+            // --- EXECUÇÃO DE CLIQUES E ATUALIZAÇÕES NO FIRESTORE ---
 
-            const btnM2 = document.getElementById('btn-m2');
-            if (btnM2) {
-                btnM2.onclick = async () => {
-                    btnM2.disabled = true;
-                    btnM2.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            const associarCliqueMissao = (idBotao, campoDb, valorIncremento, tipoMoeda, nomeHistorico, textoSucesso) => {
+                const btn = document.getElementById(idBotao);
+                if (!btn) return;
+                btn.onclick = async () => {
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
                     try {
                         const uid = auth.currentUser.uid;
-                        await updateDoc(doc(db, "usuarios", uid), { missao2Coletada: true, saldoLucro: increment(1), totalGanhos: increment(1) });
-                        await addDoc(collection(db, "historico"), { userId: uid, valor: 1, tipo: 'Missão: Foco Diário', data: Timestamp.now() });
-                        Swal.fire({ title: 'Sucesso!', text: 'R$ 1,00 creditado no seu saldo de saque!', icon: 'success', background: '#060b19', color: '#fff', confirmButtonColor: '#0052ff' });
-                    } catch(e) { console.error(e); btnM2.disabled = false; btnM2.innerText = 'Resgatar'; }
+                        let camposUpdate = {};
+                        camposUpdate[campoDb] = true;
+
+                        if (tipoMoeda === 'giros') {
+                            camposUpdate['giros'] = increment(valorIncremento);
+                        } else {
+                            camposUpdate['saldoLucro'] = increment(valorIncremento);
+                            camposUpdate['totalGanhos'] = increment(valorIncremento);
+                        }
+
+                        await updateDoc(doc(db, "usuarios", uid), camposUpdate);
+                        await addDoc(collection(db, "historico"), { 
+                            userId: uid, 
+                            valor: tipoMoeda === 'saldo' ? valorIncremento : 0, 
+                            tipo: `Missão: ${nomeHistorico}`, 
+                            data: Timestamp.now() 
+                        });
+
+                        Swal.fire({ 
+                            title: 'Missão Concluída!', 
+                            text: textoSucesso, 
+                            icon: 'success', 
+                            background: '#060b19', 
+                            color: '#fff', 
+                            confirmButtonColor: '#0052ff' 
+                        });
+                    } catch(e) { 
+                        console.error(e); 
+                        btn.disabled = false; 
+                        btn.innerText = 'Resgatar'; 
+                    }
                 };
-            }
+            };
+
+            associarCliqueMissao('btn-m1', 'missao1Coletada', 1, 'giros', 'Investidor Ativo', 'Você resgatou +1 Giro Grátis na Roleta!');
+            associarCliqueMissao('btn-m2', 'missao2Coletada', 1.00, 'saldo', 'Foco Diário', 'R$ 1,00 creditado! Próxima missão desbloqueada.');
+            associarCliqueMissao('btn-m3', 'missao3Coletada', 2.00, 'saldo', 'Líder Iniciante', 'R$ 2,00 creditados! Você desbloqueou o próximo nível.');
+            associarCliqueMissao('btn-m4', 'missao4Coletada', 5.00, 'saldo', 'Rede em Expansão', 'R$ 5,00 adicionados! Continue expandindo.');
+            associarCliqueMissao('btn-m5', 'missao5Coletada', 10, 'giros', 'Magnata da Rede', 'Sensacional! +10 Giros Grátis injetados na sua conta.');
+            associarCliqueMissao('btn-m6', 'missao6Coletada', 20.00, 'saldo', 'Embaixador Nexus', 'Parabéns! Você concluiu toda a jornada de missões e ganhou R$ 20,00.');
         }
 
         async function carregarInvestimentos(uid, userData) {
