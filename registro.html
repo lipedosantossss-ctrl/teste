@@ -268,24 +268,24 @@
                     } catch (e) { console.error("Erro na linhagem:", e); }
                 }
 
-                await setDoc(doc(db, "usuarios", user.uid), {
-                    nome: nome,
-                    email: email,
-                    saldo: saldoInicial, 
-                    saldoLucro: 0,      
-                    totalGanhos: 0,
-                    totalComissoes: 0,
-                    indicadosCount: 0,   
-                    indicadosL2Count: 0, 
-                    indicadosL3Count: 0, 
-                    indicadoPor: paiId,        
-                    indicadoPorAvo: avoId,     
-                    indicadoPorBisavo: bisavoId, 
-                    uid: user.uid,
-                    status: "ativo",
-                    dataCriacao: new Date().toISOString()
-                });
-
+               await setDoc(doc(db, "usuarios", user.uid), {
+    nome: nome, //[cite: 6]
+    email: email, //[cite: 6]
+    saldo: saldoInicial, //[cite: 6]
+    saldoLucro: 0, //[cite: 6]     
+    totalGanhos: 0, //[cite: 6]
+    totalComissoes: 0, //[cite: 6]
+    giros: 1, // <--- ADICIONE ESTA LINHA AQUI!
+    indicadosCount: 0, //[cite: 6]  
+    indicadosL2Count: 0, //[cite: 6]
+    indicadosL3Count: 0, //[cite: 6]
+    indicadoPor: paiId, //[cite: 6]       
+    indicadoPorAvo: avoId, //[cite: 6]    
+    indicadoPorBisavo: bisavoId, //[cite: 6]
+    uid: user.uid, //[cite: 6]
+    status: "ativo", //[cite: 6]
+    dataCriacao: new Date().toISOString() //[cite: 6]
+});
                 if (saldoInicial > 0) {
                     await addDoc(collection(db, "historico"), {
                         userId: user.uid,
