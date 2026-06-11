@@ -622,7 +622,8 @@
             const container = document.getElementById('container-missoes');
             if(!container) return;
 
-            const totalIndicados = userData.indicadosCount || 0; 
+            // NOVA LÓGICA DE INDICADOS: Conta apenas convidados nível 1 com depósito ativo
+            const totalIndicados = userData.indicadosAtivosNivel1 || 0; 
 
             // Estado das coletas mapeadas do banco de dados
             const m1Coletada = userData.missao1Coletada === true;
@@ -693,7 +694,7 @@
                 <div class="quest-item animate__animated animate__fadeInUp">
                     <div class="quest-info">
                         <h4>📢 Rede em Expansão</h4>
-                        <p>Alcance um total de 3 indicados diretos</p>
+                        <p>Alcance um total de 3 indicados diretos ativos</p>
                         <div class="quest-reward"><i class="fas fa-wallet"></i> +R$ 5,00 Saldo</div>
                     </div>
                     <div>`;
@@ -710,7 +711,7 @@
                 <div class="quest-item animate__animated animate__fadeInUp">
                     <div class="quest-info">
                         <h4>💎 Magnata da Rede</h4>
-                        <p>Alcance um total de 5 indicados diretos</p>
+                        <p>Alcance um total de 5 indicados diretos ativos</p>
                         <div class="quest-reward"><i class="fas fa-dharmachakra"></i> +10 Giros Grátis</div>
                     </div>
                     <div>`;
@@ -727,7 +728,7 @@
                 <div class="quest-item animate__animated animate__fadeInUp">
                     <div class="quest-info">
                         <h4>👑 Embaixador Nexus</h4>
-                        <p>Alcance a marca de 10 indicados diretos</p>
+                        <p>Alcance a marca de 10 indicados diretos ativos</p>
                         <div class="quest-reward"><i class="fas fa-wallet"></i> +R$ 20,00 Saldo</div>
                     </div>
                     <div>`;
