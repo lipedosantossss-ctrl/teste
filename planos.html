@@ -64,7 +64,7 @@
             background: var(--card-glass);
             border-radius: 24px;
             padding: 22px 25px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             border: 1px solid var(--card-border);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
@@ -97,6 +97,95 @@
             color: #fff; 
             margin-top: 5px; 
             letter-spacing: -0.5px;
+        }
+
+        /* NOVO: SIMULADOR DE INVESTIMENTOS INTERATIVO */
+        .simulator-card {
+            background: rgba(0, 82, 255, 0.03);
+            border: 1px solid rgba(0, 210, 255, 0.15);
+            border-radius: 24px;
+            padding: 22px 25px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.02);
+        }
+        .simulator-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .simulator-header h4 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--cyan-neon);
+            font-weight: 700;
+        }
+        .slider-container {
+            position: relative;
+            margin: 25px 0 15px 0;
+        }
+        .range-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 7px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.1);
+            outline: none;
+        }
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--cyan-neon);
+            cursor: pointer;
+            box-shadow: 0 0 15px var(--cyan-neon);
+            transition: transform 0.1s ease;
+        }
+        .range-slider::-webkit-slider-thumb:active {
+            transform: scale(1.2);
+        }
+        .simulated-value-display {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+        .simulated-value-display small {
+            font-size: 1rem;
+            color: var(--cyan-neon);
+            margin-right: 5px;
+        }
+        .simulator-results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .sim-result-box {
+            background: rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.03);
+            padding: 12px;
+            border-radius: 14px;
+            text-align: center;
+        }
+        .sim-result-box span {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 3px;
+            font-weight: 600;
+        }
+        .sim-result-box strong {
+            font-size: 0.95rem;
+            color: #fff;
+            font-weight: 700;
         }
 
         /* SELETOR DE ABAS PREMIUM CHIPS */
@@ -144,6 +233,15 @@
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            transition: all 0.4s ease;
+        }
+
+        /* NOVO: DESTAQUE DINÂMICO DO SIMULADOR */
+        .plan-premium-card.matched-simulation {
+            border: 1px solid rgba(0, 210, 255, 0.4);
+            box-shadow: 0 15px 40px rgba(0, 210, 255, 0.15);
+            background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(0, 82, 255, 0.03) 100%);
+            transform: translateY(-2px);
         }
 
         .card-top-row {
@@ -287,6 +385,30 @@
         <div id="user-balance" class="balance-value">R$ 0,00</div>
     </div>
 
+    <!-- NOVO: SEÇÃO DO SIMULADOR GLASSMORPHISM -->
+    <div class="simulator-card animate__animated animate__fadeInDown" style="animation-delay: 0.1s;">
+        <div class="simulator-header">
+            <h4>Simulador Interativo</h4>
+            <span class="badge-cycle" id="sim-tier-badge" style="color: var(--gold-accent); border-color: rgba(255,215,0,0.2);">Essencial</span>
+        </div>
+        <div class="simulated-value-display">
+            <small>R$</small><span id="slider-render-val">100</span>
+        </div>
+        <div class="slider-container">
+            <input type="range" min="30" max="5000" value="100" step="10" class="range-slider" id="investment-slider">
+        </div>
+        <div class="simulator-results-grid">
+            <div class="sim-result-box">
+                <span>Rendimento Médio</span>
+                <strong id="sim-calc-diario" style="color: var(--green-profit);">R$ 20,00/dia</strong>
+            </div>
+            <div class="sim-result-box">
+                <span>Bônus Extra</span>
+                <strong id="sim-calc-roleta" style="color: var(--cyan-neon);">+2 Giros Roleta</strong>
+            </div>
+        </div>
+    </div>
+
     <div class="tier-navigation-bar animate__animated animate__fadeIn">
         <button class="tier-tab-btn active" id="tab-essencial" onclick="switchTierTab('essencial')">Essenciais</button>
         <button class="tier-tab-btn" id="tab-prime" onclick="switchTierTab('prime')">Prime</button>
@@ -323,6 +445,7 @@
     let saldoAtual = 0;
     let uidUsuario = null;
     let activeTier = 'essencial';
+    let currentSliderVal = 100;
 
     const listaPlanos = [
         { nome: 'MINI', valor: 30, dias: 60, diario: 6, total: 360, ativo: true, tier: 'essencial' },
@@ -344,6 +467,7 @@
             uidUsuario = user.uid;
             await carregarDados();
             await verificarRendimentos();
+            initSimulator();
             gerarPlanos();
         } else { window.location.href = "login.html"; }
     });
@@ -407,12 +531,58 @@
         } catch (error) { console.error("Erro nos rendimentos:", error); }
     }
 
-    function gerarPlanos() {
+    // NOVO: SISTEMA COMPLETO DO SIMULADOR DE INVESTIMENTOS INTERATIVO
+    function initSimulator() {
+        const slider = document.getElementById('investment-slider');
+        
+        slider.addEventListener('input', (e) => {
+            currentSliderVal = Number(e.target.value);
+            document.getElementById('slider-render-val').innerText = currentSliderVal.toLocaleString('pt-BR');
+            
+            // Encontrar plano mais próximo/adequado correspondente ao valor do slider
+            let melhorPlano = listaPlanos[0];
+            let menorDiferenca = Math.abs(currentSliderVal - listaPlanos[0].valor);
+            
+            listaPlanos.forEach(p => {
+                let diff = Math.abs(currentSliderVal - p.valor);
+                if (diff < menorDiferenca) {
+                    menorDiferenca = diff;
+                    melhorPlano = p;
+                }
+            });
+
+            // Atualizar os cards baseado na categoria do slider para dinamismo total
+            if (activeTier !== melhorPlano.tier) {
+                activeTier = melhorPlano.tier;
+                document.querySelectorAll('.tier-tab-btn').forEach(btn => btn.classList.remove('active'));
+                document.getElementById(`tab-${activeTier}`).classList.add('active');
+            }
+
+            // Atualizar textos dos resultados baseados no plano estimado do slider
+            document.getElementById('sim-calc-diario').innerText = `R$ ${melhorPlano.diario.toFixed(2).replace('.', ',')}/dia`;
+            document.getElementById('sim-tier-badge').innerText = melhorPlano.tier.toUpperCase();
+            
+            // Gamificação: Cálculo de giros simulados baseados no ticket alocado
+            let girosSimulados = 1;
+            if (currentSliderVal >= 2000) girosSimulados = 10;
+            else if (currentSliderVal >= 1000) girosSimulados = 5;
+            else if (currentSliderVal >= 350) girosSimulados = 3;
+            else if (currentSliderVal >= 100) girosSimulados = 2;
+
+            document.getElementById('sim-calc-roleta').innerText = `+${girosSimulados} Giro(s) Roleta`;
+
+            gerarPlanos(melhorPlano.nome);
+        });
+    }
+
+    function gerarPlanos(planoDestacadoNome = null) {
         const container = document.getElementById('container-planos');
         const planosFiltrados = listaPlanos.filter(p => p.tier === activeTier);
 
-        container.innerHTML = planosFiltrados.map(p => `
-            <div class="plan-premium-card ${p.ativo ? '' : 'locked-card'}">
+        container.innerHTML = planosFiltrados.map(p => {
+            const isMatched = planoDestacadoNome === p.nome;
+            return `
+            <div class="plan-premium-card ${p.ativo ? '' : 'locked-card'} ${isMatched ? 'matched-simulation' : ''}" id="card-plano-${p.nome}">
                 <div class="card-top-row">
                     <h3>CONTRATO ${p.nome}</h3>
                     <div class="badge-cycle">${p.dias} Dias Úteis</div>
@@ -421,7 +591,7 @@
                 <div class="metrics-asymmetric-grid">
                     <div class="metric-cell">
                         <span>Retorno Diário</span>
-                        <strong>R$ ${p.diario.toFixed(2).replace('.', ',')}</strong>
+                        <strong style="${isMatched ? 'color: var(--cyan-neon);' : ''}">R$ ${p.diario.toFixed(2).replace('.', ',')}</strong>
                     </div>
                     <div class="metric-cell">
                         <span>Fração de Lucro</span>
@@ -436,7 +606,8 @@
                     onclick="${p.ativo ? `comprarPlano('${p.nome}', ${p.valor}, ${p.diario}, ${p.dias})` : ''}">
                     ${p.ativo ? 'Ativar Contrato' : '<i class="fas fa-lock" style="margin-right:5px;"></i> Indisponível'}
                 </button>
-            </div>`).join('');
+            </div>`;
+        }).join('');
     }
 
     window.switchTierTab = function(tier) {
@@ -529,6 +700,13 @@
                 const dataExp = new Date();
                 dataExp.setDate(dataExp.getDate() + dias);
 
+                // Determinar giros adicionais com base no plano ativado para persistência no DB
+                let girosGanhos = 1;
+                if (valor >= 2000) girosGanhos = 10;
+                else if (valor >= 1000) girosGanhos = 5;
+                else if (valor >= 350) girosGanhos = 3;
+                else if (valor >= 100) girosGanhos = 2;
+
                 await addDoc(collection(db, "investimentos"), {
                     userId: uidUsuario,
                     plano: nome,
@@ -544,15 +722,17 @@
                 const userSnap = await getDoc(userRef);
                 const campoSaldo = userSnap.data().balance !== undefined ? "balance" : "saldo";
 
+                // Atualizar saldo do usuário e adicionar os giros da roleta conquistados
                 await updateDoc(userRef, { 
-                    [campoSaldo]: increment(-valor) 
+                    [campoSaldo]: increment(-valor),
+                    girosRoleta: increment(girosGanhos)
                 });
 
                 await addDoc(collection(db, "historico"), {
                     userId: uidUsuario,
                     valor: -valor, 
                     tipo: "Plano Ativado", 
-                    descricao: `Ativação do Plano ${nome}`,
+                    descricao: `Ativação do Plano ${nome} (+${girosGanhos} Giros Roleta)`,
                     data: Timestamp.now()
                 });
 
@@ -565,8 +745,8 @@
                 await Swal.fire({ 
                     icon: 'success', 
                     title: 'Contrato Ativado!', 
-                    text: 'Seu rendimento começará em 24h.', 
-                    timer: 2000, 
+                    text: `Seu rendimento começará em 24h e você ganhou +${girosGanhos} giros na roleta!`, 
+                    timer: 2500, 
                     showConfirmButton: false, 
                     background: '#060b19', color: '#fff' 
                 });
