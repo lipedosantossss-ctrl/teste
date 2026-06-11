@@ -113,11 +113,6 @@
             filter: drop-shadow(0 0 30px rgba(0, 82, 255, 0.25));
         }
 
-        /* Estilização das Fatias Harmonizadas com o App */
-        .slice-even { fill: #1e293b; stroke: rgba(255,255,255,0.04); stroke-width: 1.5; }
-        .slice-odd { fill: #0f172a; stroke: rgba(255,255,255,0.04); stroke-width: 1.5; }
-        .slice-premium { fill: linear-gradient(135deg, #0052ff, #00d2ff); fill: #0052ff; stroke: rgba(255,255,255,0.1); stroke-width: 1.5; }
-        
         .prize-text {
             font-weight: 800;
             font-size: 13px;
@@ -179,39 +174,35 @@
         <div class="pointer"><i class="fas fa-caret-down"></i></div>
         
         <svg class="wheel-svg" id="wheel" viewBox="0 0 300 300">
-            <defs>
-                <path id="slice-shape" d="M 150 150 L 275.56 77.5 A 145 145 0 0 1 275.56 222.5 Z" />
-            </defs>
-
             <circle cx="150" cy="150" r="146" fill="none" stroke="rgba(0, 210, 255, 0.15)" stroke-width="4" />
             
             <g transform="rotate(270 150 150)">
-                <use href="#slice-shape" class="slice-premium" />
+                <path d="M 150 150 L 275.56 77.5 A 145 145 0 0 1 275.56 222.5 Z" fill="#0052ff" stroke="rgba(255,255,255,0.1)" stroke-width="1.5" />
                 <text x="215" y="154" class="prize-text premium" transform="rotate(0 215 154)" text-anchor="middle">R$ 100</text>
             </g>
 
             <g transform="rotate(330 150 150)">
-                <use href="#slice-shape" class="slice-odd" />
+                <path d="M 150 150 L 275.56 77.5 A 145 145 0 0 1 275.56 222.5 Z" fill="#0f172a" stroke="rgba(255,255,255,0.04)" stroke-width="1.5" />
                 <text x="215" y="154" class="prize-text" transform="rotate(0 215 154)" text-anchor="middle">R$ 10</text>
             </g>
 
             <g transform="rotate(30 150 150)">
-                <use href="#slice-shape" class="slice-even" />
+                <path d="M 150 150 L 275.56 77.5 A 145 145 0 0 1 275.56 222.5 Z" fill="#1e293b" stroke="rgba(255,255,255,0.04)" stroke-width="1.5" />
                 <text x="215" y="154" class="prize-text" transform="rotate(0 215 154)" text-anchor="middle">Nada</text>
             </g>
 
             <g transform="rotate(90 150 150)">
-                <use href="#slice-shape" class="slice-odd" />
+                <path d="M 150 150 L 275.56 77.5 A 145 145 0 0 1 275.56 222.5 Z" fill="#0f172a" stroke="rgba(255,255,255,0.04)" stroke-width="1.5" />
                 <text x="215" y="154" class="prize-text" transform="rotate(0 215 154)" text-anchor="middle">R$ 20</text>
             </g>
 
             <g transform="rotate(150 150 150)">
-                <use href="#slice-shape" class="slice-even" />
+                <path d="M 150 150 L 275.56 77.5 A 145 145 0 0 1 275.56 222.5 Z" fill="#1e293b" stroke="rgba(255,255,255,0.04)" stroke-width="1.5" />
                 <text x="215" y="154" class="prize-text" transform="rotate(0 215 154)" text-anchor="middle">R$ 50</text>
             </g>
 
             <g transform="rotate(210 150 150)">
-                <use href="#slice-shape" class="slice-odd" />
+                <path d="M 150 150 L 275.56 77.5 A 145 145 0 0 1 275.56 222.5 Z" fill="#0f172a" stroke="rgba(255,255,255,0.04)" stroke-width="1.5" />
                 <text x="215" y="154" class="prize-text" transform="rotate(0 215 154)" text-anchor="middle">R$ 5</text>
             </g>
 
@@ -254,7 +245,6 @@
         let isSpinning = false;
         let degreesGiroTotal = 0;
 
-        // Ângulos mapeados milimetricamente de acordo com as fatias
         const premios = [
             { valor: 100, anguloCentro: 270 },
             { valor: 10,  anguloCentro: 330 },
@@ -283,7 +273,6 @@
                 userDocRef = doc(db, "usuarios", user.uid);
                 
                 onSnapshot(userDocRef, async (snap) => {
-                    // MECÂNICA 1: Se o usuário acabou de se cadastrar e não existe no banco, cria o registro com 1 giro grátis
                     if (!snap.exists()) {
                         await setDoc(userDocRef, {
                             giros: 1,
@@ -293,7 +282,6 @@
                             status: "ativo"
                         }, { merge: true });
 
-                        // Salva o log na nova coleção de controle de giros
                         await addDoc(collection(db, "historico_giros"), {
                             userId: user.uid,
                             quantidade: 1,
@@ -304,13 +292,15 @@
                         return; 
                     }
 
+                    // CORREÇÃO: A variável sempre atualiza seu valor verdadeiro do DB
+                    const data = snap.data();
+                    girosAtuais = data.giros !== undefined ? data.giros : 0;
+                    
+                    // Sempre atualiza o contador na tela
+                    girosDisplay.innerText = girosAtuais;
+                    
+                    // O controle dos botões só não interrompe se a roleta já estiver rodando
                     if (!isSpinning) {
-                        const data = snap.data();
-                        
-                        // Caso o documento exista mas não tenha o campo de giros, evita travar a interface
-                        girosAtuais = data.giros !== undefined ? data.giros : 0;
-                        girosDisplay.innerText = girosAtuais;
-                        
                         if(girosAtuais > 0) {
                             btnSpin.disabled = false;
                             btnSpin.innerText = "Girar Roleta";
@@ -326,19 +316,18 @@
         });
 
         btnSpin.addEventListener('click', async () => {
-            if (girosAtuais <= 0 || isSpinning) return;
+            // Prevenção extra contra cliques duplos rápidos que burlem o saldo
+            if (girosAtuais <= 0 || isSpinning || btnSpin.disabled) return;
 
             isSpinning = true;
             btnSpin.disabled = true;
             btnSpin.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Computando...';
 
             try {
-                // Deduz o giro imediatamente no banco antes da animação terminar (evita fraudes de duplo clique)
                 await updateDoc(userDocRef, { giros: increment(-1) });
 
                 const sorteado = puxarPremio();
                 
-                // Configuração física da desaceleração no ponto exato
                 const voltasCompletas = 360 * 5; 
                 const ajusteDestino = (270 - sorteado.anguloCentro + 360) % 360;
                 
@@ -348,7 +337,6 @@
                 setTimeout(async () => {
                     isSpinning = false;
 
-                    // Cria histórico do consumo na roleta
                     await addDoc(collection(db, "historico_giros"), {
                         userId: auth.currentUser.uid,
                         quantidade: -1,
@@ -358,13 +346,11 @@
                     });
 
                     if (sorteado.valor > 0) {
-                        // Aloca o saldo na carteira de rendimentos/saque
                         await updateDoc(userDocRef, {
                             saldoLucro: increment(sorteado.valor),
                             totalGanhos: increment(sorteado.valor)
                         });
 
-                        // Adiciona ao extrato financeiro unificado do app
                         await addDoc(collection(db, "historico"), {
                             userId: auth.currentUser.uid,
                             valor: sorteado.valor,
@@ -391,11 +377,12 @@
                         });
                     }
                     
-                    girosDisplay.innerText = girosAtuais - 1;
-                    if ((girosAtuais - 1) > 0) {
+                    // CORREÇÃO: O girosAtuais já vai refletir o valor atualizado e real puxado pelo Firebase no onSnapshot
+                    if (girosAtuais > 0) {
                         btnSpin.disabled = false;
                         btnSpin.innerText = "Girar Novamente";
                     } else {
+                        btnSpin.disabled = true;
                         btnSpin.innerText = "Sem Giros";
                     }
 
