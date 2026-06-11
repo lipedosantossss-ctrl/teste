@@ -20,6 +20,7 @@
             --text-muted: #8a99ad;
             --tg-blue: #0088cc;
             --red-danger: #ff4b5c;
+            --green-success: #00e676;
             
             /* Cores das Patentes */
             --rank-novato: #a1a1aa;
@@ -40,17 +41,44 @@
         body { 
             background: var(--bg-gradient); 
             color: white; 
-            padding: 25px 20px; 
+            padding: 15px 20px; 
             padding-bottom: 120px; 
             min-height: 100vh; 
             overflow-x: hidden;
+        }
+
+        /* 3ª MUDANÇA (PARTE A): FEED LIVE PROOF (FOMO) */
+        .live-proof-banner {
+            background: rgba(0, 210, 255, 0.04);
+            border: 1px solid rgba(0, 210, 255, 0.15);
+            border-radius: 14px;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: #e2e8f0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .live-proof-icon {
+            width: 8px;
+            height: 8px;
+            background: var(--green-success);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--green-success);
+            animation: pulse 1.5s infinite;
+        }
+        #live-proof-text b {
+            color: var(--cyan-neon);
         }
 
         /* TÍTULO DA PÁGINA PREMIUM */
         .page-title {
             font-size: 1.6rem;
             font-weight: 800;
-            margin: 15px 5px 25px 5px;
+            margin: 5px 5px 20px 5px;
             letter-spacing: -0.5px;
         }
         .page-title b { color: var(--cyan-neon); text-shadow: 0 0 10px rgba(0, 210, 255, 0.3); }
@@ -66,7 +94,7 @@
             box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05);
             position: relative;
             overflow: hidden;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .investor-card::before {
@@ -107,7 +135,6 @@
         .user-meta h2 { font-size: 1.15rem; font-weight: 700; text-transform: capitalize; color: #fff; }
         .user-meta p { color: var(--text-muted); font-size: 0.8rem; margin-top: 2px; }
         
-        /* Badge de Status Neon */
         .rank-badge {
             display: inline-block;
             padding: 3px 8px;
@@ -123,7 +150,6 @@
             transition: all 0.5s ease;
         }
 
-        /* Dados de Balanço FinTech */
         .card-balances-grid {
             display: grid;
             grid-template-columns: 1.2fr 0.8fr;
@@ -150,9 +176,9 @@
         .career-card {
             background: var(--card-glass);
             border-radius: 20px;
-            padding: 18px 20px;
+            padding: 15px 20px;
             border: 1px solid var(--card-border);
-            margin-bottom: 25px;
+            margin-bottom: 15px;
         }
         .career-header {
             display: flex;
@@ -179,6 +205,68 @@
             box-shadow: 0 0 10px var(--cyan-neon);
             transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
+        /* 3ª MUDANÇA (PARTE B): O COFRE NEXUS (LOCKED STAKING) */
+        .vault-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(0, 210, 255, 0.02) 100%);
+            border-radius: 24px;
+            padding: 22px;
+            border: 1px solid rgba(0, 210, 255, 0.15);
+            margin-bottom: 25px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .vault-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .vault-icon-box {
+            width: 44px;
+            height: 44px;
+            background: rgba(0, 210, 255, 0.08);
+            border: 1px solid rgba(0, 210, 255, 0.25);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyan-neon);
+            font-size: 1.1rem;
+            animation: pulse-neon 2s infinite ease-in-out;
+        }
+        .vault-title-meta h3 { font-size: 1rem; font-weight: 700; color: #fff; }
+        .vault-title-meta p { font-size: 0.75rem; color: var(--text-muted); }
+
+        .vault-status-box {
+            background: rgba(0,0,0,0.2);
+            border-radius: 14px;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--card-border);
+        }
+        .vault-timer {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 0.5px;
+        }
+        .vault-timer i { color: var(--cyan-neon); margin-right: 5px; }
+
+        .btn-vault-action {
+            background: linear-gradient(90deg, #0052ff, #00d2ff);
+            border: none;
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 210, 255, 0.25);
+        }
+        .btn-vault-action:active { transform: scale(0.96); }
 
         /* CATEGORIAS EM CÁPSULAS MODULARES */
         .menu-category-title {
@@ -226,7 +314,6 @@
             font-size: 0.95rem;
         }
 
-        /* Cores temáticas para redes sociais */
         .menu-row-item.social-tg .icon-wrapper { 
             color: var(--tg-blue); 
             background: rgba(0, 136, 204, 0.05); 
@@ -236,7 +323,6 @@
         .menu-row-item span { font-size: 0.9rem; font-weight: 600; }
         .menu-row-item .chevron-right { margin-left: auto; color: #4b5563; font-size: 0.8rem; }
 
-        /* FLOATING TELEGRAM BUTTON RESIZED */
         .btn-float-tg {
             position: fixed; bottom: 95px; right: 20px;
             width: 50px; height: 50px; background-color: var(--tg-blue);
@@ -248,7 +334,6 @@
         }
         .btn-float-tg:active { transform: scale(0.9); }
 
-        /* NATIVE BOTTOM NAVIGATION HUB */
         .nav-bottom { 
             position: fixed; bottom: 0; left: 0; width: 100%; 
             background: #030611; display: flex; justify-content: space-around; 
@@ -268,7 +353,6 @@
         .nav-item.active { color: white; }
         .nav-item.active i { color: var(--cyan-neon); text-shadow: 0 0 10px rgba(0, 210, 255, 0.4); }
 
-        /* BOTÃO LOGOUT DANGER ELEGANTE */
         .btn-logout-danger { 
             width: 100%; padding: 16px; border-radius: 18px; 
             border: 1px solid rgba(255, 75, 92, 0.15); background: rgba(255, 75, 92, 0.02); 
@@ -276,6 +360,12 @@
             font-size: 0.9rem; transition: 0.2s; margin-top: 10px;
         }
         .btn-logout-danger:active { background: rgba(255, 75, 92, 0.08); transform: scale(0.98); }
+
+        /* Animações nativas extras */
+        @keyframes pulse-neon {
+            0%, 100% { box-shadow: 0 0 5px rgba(0, 210, 255, 0.2); }
+            50% { box-shadow: 0 0 15px rgba(0, 210, 255, 0.5); }
+        }
     </style>
 </head>
 <body>
@@ -284,9 +374,16 @@
         <i class="fab fa-telegram-plane"></i>
     </a>
 
+    <!-- COMPONENTE: FEED LIVE PROOF DINÂMICO -->
+    <div class="live-proof-banner animate__animated animate__fadeInDown">
+        <div class="live-proof-icon"></div>
+        <div id="live-proof-text">Conectando ao feed de transações Nexus...</div>
+    </div>
+
     <h1 class="page-title">Configurações<b>.</b></h1>
 
-    <div class="investor-card animate__animated animate__fadeInDown">
+    <!-- CARD PRINCIPAL DO INVESTIDOR -->
+    <div class="investor-card animate__animated animate__fadeInDown" style="animation-delay: 0.05s;">
         <div class="card-header-user">
             <div class="profile-avatar" id="user-avatar"><i class="fas fa-user"></i></div>
             <div class="user-meta">
@@ -307,7 +404,8 @@
         </div>
     </div>
 
-    <div class="career-card animate__animated animate__fadeInDown" style="animation-delay: 0.02s;">
+    <!-- COMPONENTE: BARRA DE PROGRESSO DE CARREIRA -->
+    <div class="career-card animate__animated animate__fadeInDown" style="animation-delay: 0.1s;">
         <div class="career-header">
             <small>Progresso de Carreira</small>
             <span id="career-next-step">0/5 Indicações</span>
@@ -317,8 +415,25 @@
         </div>
     </div>
 
+    <!-- COMPONENTE: O COFRE NEXUS (STAKING) -->
+    <div class="vault-card animate__animated animate__fadeInDown" style="animation-delay: 0.12s;">
+        <div class="vault-header">
+            <div class="vault-icon-box"><i class="fas fa-vault"></i></div>
+            <div class="vault-title-meta">
+                <h3>Cofre Forte Nexus</h3>
+                <p>Tranque lucros por 7 dias e ganhe +15% bônus</p>
+            </div>
+        </div>
+        <div class="vault-status-box">
+            <div class="vault-timer" id="vault-timer-display">
+                <i class="fas fa-lock-open"></i> Cofre Vazio
+            </div>
+            <button class="btn-vault-action" id="btn-vault">Trancar Saldo</button>
+        </div>
+    </div>
+
     <div class="menu-category-title">Operações Financeiras</div>
-    <div class="menu-group-box animate__animated animate__fadeInUp" style="animation-delay: 0.05s;">
+    <div class="menu-group-box animate__animated animate__fadeInUp" style="animation-delay: 0.15s;">
         <a href="deposito.html" class="menu-item menu-row-item">
             <div class="icon-wrapper"><i class="fas fa-plus-circle"></i></div>
             <span>Adicionar Fundos</span>
@@ -337,7 +452,7 @@
     </div>
 
     <div class="menu-category-title">Suporte & Comunidade</div>
-    <div class="menu-group-box animate__animated animate__fadeInUp" style="animation-delay: 0.1s;">
+    <div class="menu-group-box animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
         <a href="https://t.me/monety9220" target="_blank" class="menu-item menu-row-item social-tg">
             <div class="icon-wrapper"><i class="fas fa-headset"></i></div>
             <span>Atendimento ao Cliente</span>
@@ -350,7 +465,7 @@
         </a>
     </div>
 
-    <button class="btn-logout-danger animate__animated animate__fadeInUp" style="animation-delay: 0.15s;" id="btnLogout">Desconectar da Conta</button>
+    <button class="btn-logout-danger animate__animated animate__fadeInUp" style="animation-delay: 0.25s;" id="btnLogout">Desconectar da Conta</button>
 
     <nav class="nav-bottom">
         <a href="home.html" class="nav-item"><i class="fas fa-home"></i><span>Início</span></a>
@@ -362,7 +477,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDKDFw7khZzM9hIX7xbbrbFQeESiCLnmOw",
@@ -377,7 +492,36 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Função interna para processar e renderizar o nível/patente do usuário baseado em rede activa
+        let saldoGlobal = 0;
+        let currentUserUid = null;
+
+        // --- ENGINE DO FEED DE ATIVIDADES LIVE PROOF (FOMO) ---
+        const listaNomesFOMO = ["marcos_silva", "julia_resende", "felipe.lucros", "gabriel_nexus", "ana_carol", "rafael_invest", "bruno_b", "amanda_m", "diego_stk"];
+        const listaAcoesFOMO = [
+            { txt: "acabou de ativar o CONTRATO VIP! ⚡", cor: "var(--cyan-neon)" },
+            { txt: "solicitou um saque de R$ 320,00 via PIX! 💸", cor: "var(--green-success)" },
+            { txt: "recebeu R$ 45,00 de comissão de rede! 🎉", cor: "var(--rank-tita)" },
+            { txt: "trancou R$ 500,00 no Cofre Forte! 🔒", cor: "#b967ff" }
+        ];
+
+        function rodarFeedFOMO() {
+            const campoTexto = document.getElementById('live-proof-text');
+            setInterval(() => {
+                const nomeAleatorio = listaNomesFOMO[Math.floor(Math.random() * listaNomesFOMO.length)];
+                const acaoAleatoria = listaAcoesFOMO[Math.floor(Math.random() * listaAcoesFOMO.length)];
+                
+                campoTexto.style.opacity = 0;
+                setTimeout(() => {
+                    campoTexto.innerHTML = `Usuário <b>${nomeAleatorio}</b> ${acaoAleatoria.txt}`;
+                    campoTexto.style.opacity = 1;
+                }, 400);
+
+            }, 4500);
+        }
+        rodarFeedFOMO();
+
+
+        // --- ENGINE DO PLANO DE CARREIRA ---
         function atualizarPatenteCarreira(indicados) {
             const avatar = document.getElementById('user-avatar');
             const badge = document.getElementById('rank-badge');
@@ -416,7 +560,6 @@
                 metaTexto = "Nível Máximo Alcançado!";
             }
 
-            // Aplicar Estilos Dinâmicos e Neon
             badge.innerText = patente;
             badge.style.color = corRank;
             badge.style.borderColor = corRank;
@@ -431,8 +574,96 @@
             barFill.style.width = `${pct}%`;
         }
 
+        // --- ENGINE DO COFRE FORTE (STAKING) COM REGRESSIVO ---
+        function gerenciarCofreInterface(dadosCofre) {
+            const displayTimer = document.getElementById('vault-timer-display');
+            const btnVault = document.getElementById('btn-vault');
+
+            if (dadosCofre && dadosCofre.ativo) {
+                btnVault.innerText = "Trancado";
+                btnVault.style.background = "rgba(255,255,255,0.05)";
+                btnVault.style.border = "1px solid rgba(255,255,255,0.1)";
+                btnVault.style.boxShadow = "none";
+                btnVault.disabled = true;
+
+                const fimStaking = dadosCofre.dataFim; 
+
+                const x = setInterval(() => {
+                    const agora = new Date().getTime();
+                    const distancia = fimStaking - agora;
+
+                    if (distancia < 0) {
+                        clearInterval(x);
+                        displayTimer.innerHTML = `<span style="color:var(--green-success)"><i class="fas fa-lock-open"></i> Concluído! R$ ${dadosCofre.valorFinal.toFixed(2)} liberado.</span>`;
+                    } else {
+                        const dias = Math.floor(distancia / (1000 * 60 * 60 * 24));
+                        const horas = Math.floor((distancia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        const minutos = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60));
+                        const segundos = Math.floor((distancia % (1000 * 60)) / 1000);
+                        displayTimer.innerHTML = `<i class="fas fa-lock" style="color:var(--red-danger)"></i> R$ ${dadosCofre.valorTrancado.toFixed(2)} (${dias}d ${horas}h ${minutos}m ${segundos}s)`;
+                    }
+                }, 1000);
+            } else {
+                displayTimer.innerHTML = `<i class="fas fa-lock-open"></i> Cofre Disponível`;
+                btnVault.disabled = false;
+            }
+        }
+
+        // Evento do clique de ativação do Cofre Forte
+        document.getElementById('btn-vault').addEventListener('click', async () => {
+            if (saldoGlobal < 20) {
+                Swal.fire({ icon: 'error', title: 'Saldo Insuficiente', text: 'Você precisa de pelo menos R$ 20,00 de saldo livre para usar o Cofre.', background: '#060b19', color: '#fff' });
+                return;
+            }
+
+            const { value: valorTrancar } = await Swal.fire({
+                title: 'Trancar Saldo no Cofre',
+                text: `Digite o valor que deseja enviar ao cofre (Saldo Máx: R$ ${saldoGlobal.toFixed(2)}):`,
+                input: 'number',
+                inputAttributes: { min: 20, step: 1 },
+                showCancelButton: true,
+                confirmButtonColor: '#0052ff',
+                background: '#060b19',
+                color: '#fff',
+                confirmButtonText: 'Confirmar e Trancar 🔒'
+            });
+
+            if (valorTrancar) {
+                const valorNum = Number(valorTrancar);
+                if (valorNum > saldoGlobal || valorNum < 20) {
+                    Swal.fire({ icon: 'error', title: 'Valor inválido', text: 'Verifique se o valor não supera seu saldo ou é menor que R$ 20.', background: '#060b19', color: '#fff' });
+                    return;
+                }
+
+                try {
+                    const userRef = doc(db, "usuarios", currentUserUid);
+                    const seteDiasEmMs = 7 * 24 * 60 * 60 * 1000;
+                    const objetoCofre = {
+                        ativo: true,
+                        valorTrancado: valorNum,
+                        valorFinal: valorNum * 1.15, // +15% de Rendimento
+                        dataFim: new Date().getTime() + seteDiasEmMs
+                    };
+
+                    await updateDoc(userRef, {
+                        saldo: saldoGlobal - valorNum,
+                        cofreNexus: objetoCofre
+                    });
+
+                    Swal.fire({ icon: 'success', title: 'Cofre Trancado!', text: `Seus R$ ${valorNum.toFixed(2)} foram assegurados com sucesso e renderão +15%!`, background: '#060b19', color: '#fff' });
+                    setTimeout(() => location.reload(), 1500);
+
+                } catch (e) {
+                    console.error("Erro ao salvar dados no cofre", e);
+                }
+            }
+        });
+
+
+        // --- CARREGAMENTO DO USUÁRIO ---
         onAuthStateChanged(auth, async (user) => {
             if (user) {
+                currentUserUid = user.uid;
                 document.getElementById('display-email').innerText = user.email;
                 try {
                     const userRef = doc(db, "usuarios", user.uid);
@@ -440,17 +671,17 @@
                     if(snap.exists()){
                         const d = snap.data();
                         
-                        // Detectar variação de campos de saldo
-                        const saldoDisponivel = d.saldo !== undefined ? d.saldo : (d.balance || 0);
+                        saldoGlobal = d.saldo !== undefined ? Number(d.saldo) : (Number(d.balance) || 0);
 
                         document.getElementById('display-nome').innerText = d.nome || "Usuário";
-                        document.getElementById('stat-saldo').innerText = `R$ ${(Number(saldoDisponivel) || 0).toFixed(2)}`;
+                        document.getElementById('stat-saldo').innerText = `R$ ${saldoGlobal.toFixed(2)}`;
                         
                         const totalIndicados = d.indicadosCount || 0;
                         document.getElementById('stat-indicados').innerHTML = `<i class="fas fa-users" style="font-size:0.85rem; margin-right:6px; color: var(--cyan-neon);"></i>${totalIndicados}`;
                         
-                        // Disparar motor de gamificação
+                        // Atualizar Sistemas Modulares
                         atualizarPatenteCarreira(totalIndicados);
+                        gerenciarCofreInterface(d.cofreNexus);
                     }
                 } catch (err) {
                     console.error("Erro ao carregar perfil:", err);
@@ -482,4 +713,5 @@
         });
     </script>
 </body>
+</html>
 </html>
