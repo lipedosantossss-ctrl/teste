@@ -37,7 +37,6 @@
             padding: 20px;
         }
 
-        /* Container Centralizado para Aparência App Mobile Premium */
         .app-container {
             width: 100%;
             max-width: 440px;
@@ -77,7 +76,6 @@
         .secure-alert-banner i { color: var(--gold); font-size: 1.2rem; }
         .secure-alert-banner p { font-size: 0.8rem; color: #fbbf24; line-height: 1.4; }
 
-        /* ROW HORIZONTAL DE CHIPS DE VALORES */
         .scroll-amount-row { 
             display: flex; 
             gap: 8px; 
@@ -111,7 +109,6 @@
             box-shadow: 0 4px 12px var(--neon-green-glow);
         }
 
-        /* DISPLAY CENTRAL DE VALOR */
         .digital-teller-display { 
             background: rgba(0, 0, 0, 0.2);
             border: 1px solid var(--border-color);
@@ -153,7 +150,6 @@
             text-align: left;
         }
 
-        /* CONTAINER DO QR CODE */
         #qr-container {
             display: none;
             text-align: center;
@@ -210,7 +206,6 @@
             overflow-y: auto;
         }
 
-        /* BOTÕES */
         .btn-core-action { 
             width: 100%; 
             padding: 16px; 
@@ -257,12 +252,12 @@
 
             <div class="secure-alert-banner">
                 <i class="fas fa-shield-halved"></i>
-                <p>O aporte mínimo operacional é de <b>R$ 50,00</b>. Transações PIX passam por checkout automático e creditam em segundos.</p>
+                <p>O aporte mínimo operacional é de <b>R$ 35,00</b>. Transações PIX passam por checkout automático e creditam em segundos.</p>
             </div>
 
             <div class="scroll-amount-row">
-                <div class="chip-amount-select active" onclick="setAmount(50, this)">R$ 50</div>
-                <div class="chip-amount-select" onclick="setAmount(75, this)">R$ 75</div>
+                <div class="chip-amount-select active" onclick="setAmount(35, this)">R$ 35</div>
+                <div class="chip-amount-select" onclick="setAmount(50, this)">R$ 50</div>
                 <div class="chip-amount-select" onclick="setAmount(100, this)">R$ 100</div>
                 <div class="chip-amount-select" onclick="setAmount(150, this)">R$ 150</div>
                 <div class="chip-amount-select" onclick="setAmount(500, this)">R$ 500</div>
@@ -273,7 +268,7 @@
                 <label>Defina o montante de transferência</label>
                 <div class="teller-input-box">
                     <span class="currency-label">R$</span>
-                    <input type="number" id="deposito-valor" value="50" placeholder="50.00">
+                    <input type="number" id="deposito-valor" value="35" placeholder="35.00">
                 </div>
             </div>
 
@@ -404,8 +399,8 @@
             const valor = parseFloat(valorInput.value);
             const btn = document.getElementById('btn-gerar');
 
-            if (isNaN(valor) || valor < 50) {
-                return Swal.fire({ icon: 'error', title: 'Valor Mínimo', text: 'O valor mínimo para depósito é de R$ 50,00', background: '#141419', color: '#fff', confirmButtonColor: '#ff3838' });
+            if (isNaN(valor) || valor < 35) {
+                return Swal.fire({ icon: 'error', title: 'Valor Mínimo', text: 'O valor mínimo para depósito é de R$ 35,00', background: '#141419', color: '#fff', confirmButtonColor: '#ff3838' });
             }
 
             btn.disabled = true;
