@@ -645,9 +645,9 @@
                         dataFim: new Date().getTime() + seteDiasEmMs
                     };
 
-                    // Atualiza o banco deduzindo o valor do saldo disponível e criando o Cofre
+                    // Atualiza o banco deduzindo o valor do campo correto
                     await updateDoc(userRef, {
-                        disponivelSaque: saldoGlobal - valorNum, // Atualizado para descontar da chave correta
+                        saldoLucro: saldoGlobal - valorNum, // Lendo a chave idêntica a do banco
                         cofreNexus: objetoCofre
                     });
 
@@ -672,9 +672,8 @@
                     if(snap.exists()){
                         const d = snap.data();
                         
-                        // CORREÇÃO: Lendo apenas o Disponível para Saque. 
-                        // Coloquei algumas variações de nome só por segurança caso o nome varie um pouco.
-                        saldoGlobal = Number(d.disponivelSaque) || Number(d.saldoDisponivel) || Number(d.saldo) || 0;
+                        // CORREÇÃO: Lendo especificamente "saldoLucro" com base no seu Firestore
+                        saldoGlobal = d.saldoLucro !== undefined ? Number(d.saldoLucro) : 0;
 
                         document.getElementById('display-nome').innerText = d.nome || "Usuário";
                         document.getElementById('stat-saldo').innerText = `R$ ${saldoGlobal.toFixed(2)}`;
