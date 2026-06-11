@@ -47,7 +47,7 @@
             overflow-x: hidden;
         }
 
-        /* 3ª MUDANÇA (PARTE A): FEED LIVE PROOF (FOMO) */
+        /* FEED LIVE PROOF (FOMO) */
         .live-proof-banner {
             background: rgba(0, 210, 255, 0.04);
             border: 1px solid rgba(0, 210, 255, 0.15);
@@ -206,7 +206,7 @@
             transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* 3ª MUDANÇA (PARTE B): O COFRE NEXUS (LOCKED STAKING) */
+        /* O COFRE NEXUS (LOCKED STAKING) */
         .vault-card {
             background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(0, 210, 255, 0.02) 100%);
             border-radius: 24px;
@@ -374,7 +374,7 @@
         <i class="fab fa-telegram-plane"></i>
     </a>
 
-    <!-- COMPONENTE: FEED LIVE PROOF DINÂMICO -->
+    <!-- FEED LIVE PROOF DINÂMICO -->
     <div class="live-proof-banner animate__animated animate__fadeInDown">
         <div class="live-proof-icon"></div>
         <div id="live-proof-text">Conectando ao feed de transações Nexus...</div>
@@ -404,7 +404,7 @@
         </div>
     </div>
 
-    <!-- COMPONENTE: BARRA DE PROGRESSO DE CARREIRA -->
+    <!-- BARRA DE PROGRESSO DE CARREIRA -->
     <div class="career-card animate__animated animate__fadeInDown" style="animation-delay: 0.1s;">
         <div class="career-header">
             <small>Progresso de Carreira</small>
@@ -415,7 +415,7 @@
         </div>
     </div>
 
-    <!-- COMPONENTE: O COFRE NEXUS (STAKING) -->
+    <!-- O COFRE NEXUS (STAKING) -->
     <div class="vault-card animate__animated animate__fadeInDown" style="animation-delay: 0.12s;">
         <div class="vault-header">
             <div class="vault-icon-box"><i class="fas fa-vault"></i></div>
@@ -631,7 +631,7 @@
             if (valorTrancar) {
                 const valorNum = Number(valorTrancar);
                 if (valorNum > saldoGlobal || valorNum < 20) {
-                    Swal.fire({ icon: 'error', title: 'Valor inválido', text: 'Verifique se o valor não supera seu saldo ou é menor que R$ 20.', background: '#060b19', color: '#fff' });
+                    Swal.fire({ icon: 'error', title: 'Valor inválido', text: 'Verifique se o valor não supera seu saldo disponível ou é menor que R$ 20.', background: '#060b19', color: '#fff' });
                     return;
                 }
 
@@ -645,8 +645,9 @@
                         dataFim: new Date().getTime() + seteDiasEmMs
                     };
 
+                    // Atualiza o banco deduzindo o valor do saldo disponível e criando o Cofre
                     await updateDoc(userRef, {
-                        saldo: saldoGlobal - valorNum,
+                        disponivelSaque: saldoGlobal - valorNum, // Atualizado para descontar da chave correta
                         cofreNexus: objetoCofre
                     });
 
@@ -671,7 +672,9 @@
                     if(snap.exists()){
                         const d = snap.data();
                         
-                        saldoGlobal = d.saldo !== undefined ? Number(d.saldo) : (Number(d.balance) || 0);
+                        // CORREÇÃO: Lendo apenas o Disponível para Saque. 
+                        // Coloquei algumas variações de nome só por segurança caso o nome varie um pouco.
+                        saldoGlobal = Number(d.disponivelSaque) || Number(d.saldoDisponivel) || Number(d.saldo) || 0;
 
                         document.getElementById('display-nome').innerText = d.nome || "Usuário";
                         document.getElementById('stat-saldo').innerText = `R$ ${saldoGlobal.toFixed(2)}`;
@@ -713,5 +716,4 @@
         });
     </script>
 </body>
-</html>
 </html>
