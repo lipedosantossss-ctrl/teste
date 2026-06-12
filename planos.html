@@ -99,7 +99,7 @@
             letter-spacing: -0.5px;
         }
 
-        /* NOVO: SIMULADOR DE INVESTIMENTOS INTERATIVO */
+        /* SIMULADOR DE INVESTIMENTOS INTERATIVO */
         .simulator-card {
             background: rgba(0, 82, 255, 0.03);
             border: 1px solid rgba(0, 210, 255, 0.15);
@@ -236,7 +236,7 @@
             transition: all 0.4s ease;
         }
 
-        /* NOVO: DESTAQUE DINÂMICO DO SIMULADOR */
+        /* DESTAQUE DINÂMICO DO SIMULADOR */
         .plan-premium-card.matched-simulation {
             border: 1px solid rgba(0, 210, 255, 0.4);
             box-shadow: 0 15px 40px rgba(0, 210, 255, 0.15);
@@ -385,7 +385,7 @@
         <div id="user-balance" class="balance-value">R$ 0,00</div>
     </div>
 
-    <!-- NOVO: SEÇÃO DO SIMULADOR GLASSMORPHISM -->
+    <!-- SEÇÃO DO SIMULADOR GLASSMORPHISM -->
     <div class="simulator-card animate__animated animate__fadeInDown" style="animation-delay: 0.1s;">
         <div class="simulator-header">
             <h4>Simulador Interativo</h4>
@@ -492,6 +492,7 @@
             
             const snapshot = await getDocs(q);
             const agora = new Date();
+            const MILISSEGUNDOS_POR_DIA = 1000 * 60 * 60 * 24;
 
             for (const docInv of snapshot.docs) {
                 const dadosInv = docInv.data();
@@ -500,30 +501,41 @@
                 const ultimoPag = dadosInv.ultimoPagamento.toDate();
                 const dataExp = dadosInv.dataExpiracao.toDate();
 
+                // Se o plano já expirou completamente
                 if (agora > dataExp) {
                     await updateDoc(doc(db, "investimentos", docInv.id), { status: "finalizado" });
                     continue;
                 }
 
-                const diffTime = Math.abs(agora - ultimoPag);
-                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                // Calcula a diferença de tempo real desde o último pagamento recebido
+                const diffTime = agora - ultimoPag;
+                // Pega quantos ciclos de 24h exatos se passaram
+                const ciclosCompletos = Math.floor(diffTime / MILISSEGUNDOS_POR_DAY);
 
-                if (diffDays >= 1) {
-                    const valorPagar = dadosInv.rendimentoDiario * diffDays;
+                // Só processa se tiver dado pelo menos 24h (1 ciclo)
+                if (ciclosCompletos >= 1) {
+                    const valorPagar = dadosInv.rendimentoDiario * ciclosCompletos;
+                    
+                    // Atualiza o saldo do usuário
                     await updateDoc(doc(db, "usuarios", uidUsuario), {
                         saldoLucro: increment(valorPagar),
                         totalEarned: increment(valorPagar)
                     });
 
+                    // Move o ponteiro do último pagamento adicionando exatamente os dias pagos
+                    // Isso evita perda de milissegundos nas próximas verificações de 24h
+                    const novaDataPagamento = new Date(ultimoPag.getTime() + (ciclosCompletos * MILISSEGUNDOS_POR_DIA));
+
                     await updateDoc(doc(db, "investimentos", docInv.id), {
-                        ultimoPagamento: Timestamp.now()
+                        ultimoPagamento: Timestamp.fromDate(novaDataPagamento)
                     });
 
+                    // Registra no extrato/histórico
                     await addDoc(collection(db, "historico"), {
                         userId: uidUsuario,
                         valor: valorPagar,
                         tipo: "Rendimento",
-                        descricao: `Rendimento ${diffDays} dia(s) - Plano ${dadosInv.plano}`,
+                        descricao: `Rendimento diário acumulado (${ciclosCompletos} dia(s)) - Plano ${dadosInv.plano}`,
                         data: Timestamp.now()
                     });
                 }
@@ -531,7 +543,7 @@
         } catch (error) { console.error("Erro nos rendimentos:", error); }
     }
 
-    // NOVO: SISTEMA COMPLETO DO SIMULADOR DE INVESTIMENTOS INTERATIVO
+    // SISTEMA COMPLETO DO SIMULADOR DE INVESTIMENTOS INTERATIVO
     function initSimulator() {
         const slider = document.getElementById('investment-slider');
         
@@ -700,7 +712,6 @@
                 const dataExp = new Date();
                 dataExp.setDate(dataExp.getDate() + dias);
 
-                // Determinar giros adicionais com base no plano ativado para persistência no DB
                 let girosGanhos = 1;
                 if (valor >= 2000) girosGanhos = 10;
                 else if (valor >= 1000) girosGanhos = 5;
@@ -715,14 +726,13 @@
                     status: "ativo",
                     timestamp: Timestamp.now(),
                     dataExpiracao: Timestamp.fromDate(dataExp),
-                    ultimoPagamento: Timestamp.now()
+                    ultimoPagamento: Timestamp.now() // Define o ponto de partida do ciclo de 24h
                 });
 
                 const userRef = doc(db, "usuarios", uidUsuario);
                 const userSnap = await getDoc(userRef);
                 const campoSaldo = userSnap.data().balance !== undefined ? "balance" : "saldo";
 
-                // Atualizar saldo do usuário e adicionar os giros da roleta conquistados
                 await updateDoc(userRef, { 
                     [campoSaldo]: increment(-valor),
                     girosRoleta: increment(girosGanhos)
