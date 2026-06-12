@@ -497,7 +497,9 @@
 
                         document.getElementById('home-nome').innerText = `Olá, ${userData.nome || "Investidor"}`;
                         
-                        const girosAtuais = userData.giros || 0;
+                        // CORREÇÃO: Puxar a variável correta que alimenta a roleta (girosRoleta)
+                        const girosAtuais = userData.girosRoleta || 0;
+                        
                         const badgeRoleta = document.getElementById('roleta-badge');
                         if (girosAtuais > 0) {
                             badgeRoleta.innerText = `${girosAtuais} ${girosAtuais === 1 ? 'Giro Grátis' : 'Giros Grátis'}`;
@@ -622,7 +624,6 @@
             const container = document.getElementById('container-missoes');
             if(!container) return;
 
-            // NOVA LÓGICA DE INDICADOS: Conta apenas convidados nível 1 com depósito ativo
             const totalIndicados = userData.indicadosAtivosNivel1 || 0; 
 
             // Estado das coletas mapeadas do banco de dados
@@ -655,7 +656,6 @@
 
             // --- LÓGICA DE FILA ENCADEADA (DA 2 ATÉ A 6) ---
             if (!m2Coletada) {
-                // MISSÃO 2: CHECK-IN
                 html += `
                 <div class="quest-item animate__animated animate__fadeIn">
                     <div class="quest-info">
@@ -672,7 +672,6 @@
                 html += `</div></div>`;
 
             } else if (!m3Coletada) {
-                // MISSÃO 3: INDICAR 1 AMIGO 
                 html += `
                 <div class="quest-item animate__animated animate__fadeInUp">
                     <div class="quest-info">
@@ -689,7 +688,6 @@
                 html += `</div></div>`;
 
             } else if (!m4Coletada) {
-                // MISSÃO 4: INDICAR 3 AMIGOS 
                 html += `
                 <div class="quest-item animate__animated animate__fadeInUp">
                     <div class="quest-info">
@@ -706,7 +704,6 @@
                 html += `</div></div>`;
 
             } else if (!m5Coletada) {
-                // MISSÃO 5: INDICAR 5 AMIGOS 
                 html += `
                 <div class="quest-item animate__animated animate__fadeInUp">
                     <div class="quest-info">
@@ -723,7 +720,6 @@
                 html += `</div></div>`;
 
             } else {
-                // MISSÃO 6: SUPER LÍDER (Última da cadeia) 
                 html += `
                 <div class="quest-item animate__animated animate__fadeInUp">
                     <div class="quest-info">
@@ -744,8 +740,6 @@
 
             container.innerHTML = html;
 
-            // --- EXECUÇÃO DE CLIQUES E ATUALIZAÇÕES NO FIRESTORE ---
-
             const associarCliqueMissao = (idBotao, campoDb, valorIncremento, tipoMoeda, nomeHistorico, textoSucesso) => {
                 const btn = document.getElementById(idBotao);
                 if (!btn) return;
@@ -757,8 +751,9 @@
                         let camposUpdate = {};
                         camposUpdate[campoDb] = true;
 
+                        // CORREÇÃO: Agora injeta corretamente na variável 'girosRoleta'
                         if (tipoMoeda === 'giros') {
-                            camposUpdate['giros'] = increment(valorIncremento);
+                            camposUpdate['girosRoleta'] = increment(valorIncremento);
                         } else {
                             camposUpdate['saldoLucro'] = increment(valorIncremento);
                             camposUpdate['totalGanhos'] = increment(valorIncremento);
